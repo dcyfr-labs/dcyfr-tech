@@ -3,6 +3,7 @@ import Link from 'next/link';
 import articles from '@/data/articles.json';
 import type { Article, ArticleCategory } from '@/lib/types';
 import { ArticleCard } from '@/components/ArticleCard';
+import { DcyfrButton } from '@/components/ui/dcyfr-button';
 
 export const metadata: Metadata = {
   title: 'DCYFR Research — Agent patterns, context engineering, and AI infrastructure',
@@ -45,19 +46,25 @@ export default function HomePage() {
             Deep dives into AI agent patterns, context engineering, and production-ready infrastructure.
             Written by the team building the DCYFR ecosystem.
           </p>
-          <div className="mt-4 flex items-center gap-4">
-            <a
-              href="/rss.xml"
-              className="flex items-center gap-1.5 text-sm text-dcyfr-primary-300 hover:text-white transition-colors"
-            >
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z" />
-              </svg>
-              RSS feed
-            </a>
-            <a href="/search" className="text-sm text-dcyfr-primary-300 hover:text-white transition-colors">
-              Search articles →
-            </a>
+          <div className="mt-4 flex items-center gap-2">
+            <DcyfrButton asChild variant="ghostly" size="sm">
+              <a href="/rss.xml" className="text-dcyfr-primary-300">
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z" />
+                </svg>
+                RSS feed
+              </a>
+            </DcyfrButton>
+            <DcyfrButton asChild variant="ghostly" size="sm">
+              <Link href="/search" className="text-dcyfr-primary-300">
+                Search articles →
+              </Link>
+            </DcyfrButton>
           </div>
         </div>
 
@@ -78,9 +85,11 @@ export default function HomePage() {
           <section className="mb-12" aria-label="Recent articles">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-medium text-dcyfr-primary-300 uppercase tracking-wider">Recent</h2>
-              <Link href="/articles" className="text-xs text-dcyfr-primary-300 hover:text-white transition-colors">
-                All articles →
-              </Link>
+              <DcyfrButton asChild variant="ghostly" size="sm">
+                <Link href="/articles" className="text-dcyfr-primary-300">
+                  All articles →
+                </Link>
+              </DcyfrButton>
             </div>
             <div className="space-y-3">
               {recent.map((article) => (
