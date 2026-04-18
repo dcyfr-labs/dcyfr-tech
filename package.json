@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "export:content": "node scripts/export-nexus-content.mjs",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "test:snapshots": "playwright test e2e/snapshots.spec.ts --project=chromium",
+    "test:snapshots:update": "playwright test e2e/snapshots.spec.ts --project=chromium --update-snapshots"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
