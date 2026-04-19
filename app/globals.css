@@ -77,9 +77,9 @@
     --accent: 38 92% 50%;
     --accent-foreground: 218 85% 10%;
     --radius: 0.25rem;
-    --font-sans: 'Inter', 'Newsreader', ui-sans-serif, system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-    --font-serif: 'Tiempos Text', 'Newsreader', Georgia, serif;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-serif: ui-serif, Georgia, 'Times New Roman', Times, serif;
   }
 
   .theme-dcyfr-tech h1,
