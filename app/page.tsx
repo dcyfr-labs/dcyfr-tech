@@ -42,13 +42,13 @@ export default function HomePage() {
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">
             DCYFR Research
           </h1>
-          <p className="text-dcyfr-primary-300 text-lg max-w-2xl leading-relaxed">
+          <p className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
             Deep dives into AI agent patterns, context engineering, and production-ready infrastructure.
             Written by the team building the DCYFR ecosystem.
           </p>
           <div className="mt-4 flex items-center gap-2">
             <DcyfrButton asChild variant="ghostly" size="sm">
-              <a href="/rss.xml" className="text-dcyfr-primary-300">
+              <a href="/rss.xml" className="text-muted-foreground">
                 <svg
                   className="h-4 w-4"
                   viewBox="0 0 24 24"
@@ -61,7 +61,7 @@ export default function HomePage() {
               </a>
             </DcyfrButton>
             <DcyfrButton asChild variant="ghostly" size="sm">
-              <Link href="/search" className="text-dcyfr-primary-300">
+              <Link href="/search" className="text-muted-foreground">
                 Search articles →
               </Link>
             </DcyfrButton>
@@ -71,7 +71,7 @@ export default function HomePage() {
         {/* Featured */}
         {featured.length > 0 && (
           <section className="mb-12" aria-label="Featured articles">
-            <h2 className="text-sm font-medium text-dcyfr-primary-300 uppercase tracking-wider mb-4">Featured</h2>
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">Featured</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               {featured.map((article) => (
                 <ArticleCard key={article.id} article={article} variant="featured" />
@@ -84,9 +84,9 @@ export default function HomePage() {
         {recent.length > 0 && (
           <section className="mb-12" aria-label="Recent articles">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-medium text-dcyfr-primary-300 uppercase tracking-wider">Recent</h2>
+              <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Recent</h2>
               <DcyfrButton asChild variant="ghostly" size="sm">
-                <Link href="/articles" className="text-dcyfr-primary-300">
+                <Link href="/articles" className="text-muted-foreground">
                   All articles →
                 </Link>
               </DcyfrButton>
@@ -101,18 +101,18 @@ export default function HomePage() {
 
         {/* By category */}
         <section aria-label="Articles by category">
-          <h2 className="text-sm font-medium text-dcyfr-primary-300 uppercase tracking-wider mb-6">Browse by Topic</h2>
+          <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-6">Browse by Topic</h2>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {byCategory.map(({ category, articles: cats }) => (
               <Link
                 key={category}
                 href={`/articles?category=${encodeURIComponent(category)}`}
-                className="group rounded-xl border border-dcyfr-primary-700/60 bg-dcyfr-primary-900/60 p-4 hover:border-dcyfr-accent/40 transition-colors"
+                className="group rounded-xl border border-input/60 bg-card/60 p-4 hover:border-dcyfr-accent/40 transition-colors"
               >
-                <p className="font-medium text-white group-hover:text-dcyfr-accent-300 transition-colors">
+                <p className="font-medium text-white group-hover:text-accent transition-colors">
                   {category}
                 </p>
-                <p className="text-xs text-dcyfr-primary-300 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   {cats.length} {cats.length === 1 ? 'article' : 'articles'}
                 </p>
               </Link>

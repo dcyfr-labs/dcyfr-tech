@@ -56,7 +56,7 @@ function SearchResults() {
       <div className="relative mb-8">
         <SearchIcon
           aria-hidden="true"
-          className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-dcyfr-primary-300 z-10"
+          className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground z-10"
         />
         <DcyfrInput
           type="search"
@@ -65,12 +65,12 @@ function SearchResults() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search articles"
-          className="pl-10 h-11 border-dcyfr-primary-700/60 bg-dcyfr-primary-900/60 text-white placeholder:text-dcyfr-primary-400"
+          className="pl-10 h-11 border-input/60 bg-card/60 text-white placeholder:text-muted-foreground"
         />
       </div>
 
       {debouncedQuery.trim() === '' && !isPending ? (
-        <DcyfrAlert variant="info" className="text-dcyfr-primary-300">
+        <DcyfrAlert variant="info" className="text-muted-foreground">
           <SearchIcon aria-hidden="true" />
           <DcyfrAlertTitle>Start searching</DcyfrAlertTitle>
           <DcyfrAlertDescription>
@@ -83,18 +83,18 @@ function SearchResults() {
             <DcyfrSkeleton
               key={i}
               variant="shimmer"
-              className="h-24 w-full bg-dcyfr-primary-800/40"
+              className="h-24 w-full bg-muted/40"
             />
           ))}
         </div>
       ) : results.length === 0 ? (
-        <DcyfrAlert variant="info" className="text-dcyfr-primary-300">
+        <DcyfrAlert variant="info" className="text-muted-foreground">
           <DcyfrAlertTitle>No results for &quot;{debouncedQuery}&quot;</DcyfrAlertTitle>
           <DcyfrAlertDescription>
             Try a different keyword or browse by{' '}
             <Link
               href="/articles"
-              className="text-dcyfr-accent-300 hover:text-white transition-colors underline underline-offset-2"
+              className="text-accent hover:text-white transition-colors underline underline-offset-2"
             >
               category
             </Link>
@@ -103,7 +103,7 @@ function SearchResults() {
         </DcyfrAlert>
       ) : (
         <div className="space-y-3">
-          <p className="text-xs text-dcyfr-primary-300 mb-4" aria-live="polite">
+          <p className="text-xs text-muted-foreground mb-4" aria-live="polite">
             {results.length} result{results.length !== 1 ? 's' : ''} for &quot;{debouncedQuery}&quot;
           </p>
           {results.map((article) => (
@@ -120,7 +120,7 @@ export default function SearchPage() {
     <div className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <h1 className="text-3xl font-bold text-white mb-2">Search</h1>
-        <p className="text-dcyfr-primary-300 mb-8">
+        <p className="text-muted-foreground mb-8">
           Search across all articles, categories, and tags.
         </p>
         <Suspense>

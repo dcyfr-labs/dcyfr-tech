@@ -70,7 +70,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
         <div className="mx-auto max-w-prose">
           {/* Breadcrumb */}
           <nav
-            className="mb-8 flex items-center gap-2 text-sm text-dcyfr-primary-300"
+            className="mb-8 flex items-center gap-2 text-sm text-muted-foreground"
             aria-label="Breadcrumb"
           >
             <Link href="/" className="hover:text-white transition-colors">
@@ -81,7 +81,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               Articles
             </Link>
             <span aria-hidden="true">/</span>
-            <span className="text-dcyfr-primary-200 truncate" aria-current="page">
+            <span className="text-muted-foreground truncate" aria-current="page">
               {article.title}
             </span>
           </nav>
@@ -92,14 +92,14 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               <DcyfrBadge
                 variant="outline"
                 size="sm"
-                className="border-dcyfr-accent/30 bg-dcyfr-accent/10 text-dcyfr-accent-300"
+                className="border-dcyfr-accent/30 bg-dcyfr-accent/10 text-accent"
               >
                 {article.category}
               </DcyfrBadge>
               <DcyfrBadge
                 variant="ghostly"
                 size="sm"
-                className="border-0 bg-transparent text-dcyfr-primary-300"
+                className="border-0 bg-transparent text-muted-foreground"
               >
                 {article.readingTime} min read
               </DcyfrBadge>
@@ -107,15 +107,15 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
             <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-4">
               {article.title}
             </h1>
-            <p className="text-lg text-dcyfr-primary-300 leading-relaxed mb-6">
+            <p className="text-lg text-muted-foreground leading-relaxed mb-6">
               {article.description}
             </p>
-            <div className="flex items-center gap-3 text-sm text-dcyfr-primary-300">
+            <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <span>{article.author}</span>
               <span aria-hidden="true">·</span>
               <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
             </div>
-            <DcyfrSeparator className="mt-6 bg-dcyfr-primary-800/60" />
+            <DcyfrSeparator className="mt-6 bg-muted/60" />
           </header>
 
           {/* Content — serif headings wired via .theme-dcyfr-tech in globals.css */}
@@ -126,9 +126,9 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
           {/* Tags */}
           {article.tags.length > 0 && (
             <footer className="mt-10">
-              <DcyfrSeparator className="bg-dcyfr-primary-800/60" />
+              <DcyfrSeparator className="bg-muted/60" />
               <div className="pt-6">
-                <p className="text-xs text-dcyfr-primary-300 mb-2">Tags</p>
+                <p className="text-xs text-muted-foreground mb-2">Tags</p>
                 <div className="flex flex-wrap gap-2">
                   {article.tags.map((tag) => (
                     <DcyfrBadge
@@ -136,7 +136,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
                       asChild
                       variant="outline"
                       size="sm"
-                      className="border-dcyfr-primary-700/60 bg-dcyfr-primary-800/60 text-dcyfr-primary-200 hover:border-dcyfr-accent/40 hover:text-white transition-colors"
+                      className="border-input/60 bg-muted/60 text-muted-foreground hover:border-dcyfr-accent/40 hover:text-white transition-colors"
                     >
                       <Link href={`/search?q=${encodeURIComponent(tag)}`}>{tag}</Link>
                     </DcyfrBadge>
@@ -149,7 +149,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
           {/* Back link */}
           <div className="mt-10">
             <DcyfrButton asChild variant="ghostly" size="sm">
-              <Link href="/articles" className="text-dcyfr-primary-300">
+              <Link href="/articles" className="text-muted-foreground">
                 <ArrowLeftIcon className="size-4" aria-hidden="true" />
                 All articles
               </Link>

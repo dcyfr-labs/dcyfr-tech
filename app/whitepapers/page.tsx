@@ -22,34 +22,34 @@ export default function WhitepapersPage() {
     <div className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <h1 className="text-3xl font-bold text-white mb-2">Whitepapers</h1>
-        <p className="text-dcyfr-primary-300 mb-10">
+        <p className="text-muted-foreground mb-10">
           Technical specifications and in-depth research documents from the DCYFR team.
         </p>
 
         {typed.length === 0 ? (
-          <div className="rounded-xl border border-dcyfr-primary-800/40 bg-dcyfr-primary-900/40 p-10 text-center">
-            <p className="text-dcyfr-primary-300">No whitepapers published yet. Check back soon.</p>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-10 text-center">
+            <p className="text-muted-foreground">No whitepapers published yet. Check back soon.</p>
           </div>
         ) : (
           <div className="space-y-4">
             {typed.map((wp) => (
               <div
                 key={wp.id}
-                className="rounded-xl border border-dcyfr-primary-700/60 bg-dcyfr-primary-900/60 p-6"
+                className="rounded-xl border border-input/60 bg-card/60 p-6"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="rounded-full border border-dcyfr-accent/30 bg-dcyfr-accent/10 text-dcyfr-accent-300 px-2.5 py-0.5 text-xs font-medium">
+                      <span className="rounded-full border border-dcyfr-accent/30 bg-dcyfr-accent/10 text-accent px-2.5 py-0.5 text-xs font-medium">
                         {wp.category}
                       </span>
                       {wp.pages && (
-                        <span className="text-xs text-dcyfr-primary-300">{wp.pages} pages</span>
+                        <span className="text-xs text-muted-foreground">{wp.pages} pages</span>
                       )}
                     </div>
                     <h2 className="text-lg font-semibold text-white mb-2">{wp.title}</h2>
-                    <p className="text-sm text-dcyfr-primary-300 leading-relaxed mb-3">{wp.abstract}</p>
-                    <div className="flex items-center gap-3 text-xs text-dcyfr-primary-300">
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-3">{wp.abstract}</p>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span>{wp.author}</span>
                       <span aria-hidden="true">·</span>
                       <time dateTime={wp.publishedAt}>{formatDate(wp.publishedAt)}</time>
@@ -59,7 +59,7 @@ export default function WhitepapersPage() {
                     href={wp.downloadUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="shrink-0 flex items-center gap-1.5 rounded-lg border border-dcyfr-primary-600/60 px-3 py-2 text-sm font-medium text-dcyfr-primary-200 hover:border-dcyfr-accent/40 hover:text-white transition-colors"
+                    className="shrink-0 flex items-center gap-1.5 rounded-lg border border-input/60 px-3 py-2 text-sm font-medium text-muted-foreground hover:border-dcyfr-accent/40 hover:text-white transition-colors"
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

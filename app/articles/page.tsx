@@ -41,14 +41,14 @@ export default function ArticlesPage() {
     <div className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <h1 className="text-3xl font-bold text-white mb-2">Articles</h1>
-        <p className="text-dcyfr-primary-300 mb-8">
+        <p className="text-muted-foreground mb-8">
           {articles.length} articles on agent patterns, context engineering, and AI infrastructure.
         </p>
 
         {/* Search */}
         <div className="relative mb-6">
           <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dcyfr-primary-300"
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -61,7 +61,7 @@ export default function ArticlesPage() {
             placeholder="Search articles..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-dcyfr-primary-700/60 bg-dcyfr-primary-900/60 pl-10 pr-4 py-2.5 text-sm text-white placeholder-dcyfr-primary-400 focus:border-dcyfr-accent/60 focus:outline-none focus:ring-1 focus:ring-dcyfr-accent/40"
+            className="w-full rounded-xl border border-input/60 bg-card/60 pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-muted-foreground focus:border-dcyfr-accent/60 focus:outline-none focus:ring-1 focus:ring-dcyfr-accent/40"
             aria-label="Search articles"
           />
         </div>
@@ -73,8 +73,8 @@ export default function ArticlesPage() {
             onClick={() => setActiveCategory(null)}
             className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
               activeCategory === null
-                ? 'border-dcyfr-accent-700 bg-dcyfr-accent-700 text-white'
-                : 'border-dcyfr-primary-700/60 bg-dcyfr-primary-800/40 text-dcyfr-primary-300 hover:border-dcyfr-accent/40 hover:text-white'
+                ? 'border-primary bg-primary text-white'
+                : 'border-input/60 bg-muted/40 text-muted-foreground hover:border-dcyfr-accent/40 hover:text-white'
             }`}
           >
             All
@@ -86,8 +86,8 @@ export default function ArticlesPage() {
               onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 activeCategory === cat
-                  ? 'border-dcyfr-accent-700 bg-dcyfr-accent-700 text-white'
-                  : 'border-dcyfr-primary-700/60 bg-dcyfr-primary-800/40 text-dcyfr-primary-300 hover:border-dcyfr-accent/40 hover:text-white'
+                  ? 'border-primary bg-primary text-white'
+                  : 'border-input/60 bg-muted/40 text-muted-foreground hover:border-dcyfr-accent/40 hover:text-white'
               }`}
             >
               {cat}
@@ -97,19 +97,19 @@ export default function ArticlesPage() {
 
         {/* Results */}
         {filtered.length === 0 ? (
-          <div className="rounded-xl border border-dcyfr-primary-800/40 bg-dcyfr-primary-900/40 p-10 text-center">
-            <p className="text-dcyfr-primary-300">No articles match your search.</p>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-10 text-center">
+            <p className="text-muted-foreground">No articles match your search.</p>
             <button
               type="button"
               onClick={() => { setSearch(''); setActiveCategory(null); }}
-              className="mt-3 text-sm text-dcyfr-accent-300 hover:text-white transition-colors"
+              className="mt-3 text-sm text-accent hover:text-white transition-colors"
             >
               Clear filters
             </button>
           </div>
         ) : (
           <div className="space-y-3">
-            <p className="text-xs text-dcyfr-primary-300 mb-4" aria-live="polite" aria-atomic="true">{filtered.length} article{filtered.length !== 1 ? 's' : ''}</p>
+            <p className="text-xs text-muted-foreground mb-4" aria-live="polite" aria-atomic="true">{filtered.length} article{filtered.length !== 1 ? 's' : ''}</p>
             {filtered.map((article) => (
               <ArticleCard key={article.id} article={article} variant="compact" />
             ))}

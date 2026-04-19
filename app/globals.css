@@ -92,8 +92,8 @@
 @layer base {
   body {
     font-family: var(--font-sans, ui-sans-serif, system-ui, -apple-system, sans-serif);
-    background-color: theme('colors.dcyfr.primary.950');
-    color: theme('colors.white');
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 
   /* Prose styles for article content — preserved from legacy preset pages */
@@ -104,11 +104,11 @@
     @apply text-lg font-semibold text-white mt-6 mb-2;
   }
   .prose-dcyfr p {
-    @apply text-dcyfr-primary-200 leading-relaxed mb-4;
+    @apply text-muted-foreground leading-relaxed mb-4;
   }
   .prose-dcyfr ul,
   .prose-dcyfr ol {
-    @apply text-dcyfr-primary-200 leading-relaxed mb-4 pl-5;
+    @apply text-muted-foreground leading-relaxed mb-4 pl-5;
   }
   .prose-dcyfr li {
     @apply mb-1;
@@ -120,34 +120,34 @@
     @apply list-decimal;
   }
   .prose-dcyfr code:not(pre code) {
-    @apply font-mono text-sm bg-dcyfr-primary-800 text-dcyfr-accent-200 px-1.5 py-0.5 rounded;
+    @apply font-mono text-sm bg-muted text-accent/70 px-1.5 py-0.5 rounded;
   }
   .prose-dcyfr pre {
-    @apply bg-dcyfr-primary-900 border border-dcyfr-primary-700/60 rounded-xl p-4 overflow-x-auto mb-4;
+    @apply bg-card border border-input/60 rounded-xl p-4 overflow-x-auto mb-4;
   }
   .prose-dcyfr pre code {
-    @apply font-mono text-sm text-dcyfr-primary-100;
+    @apply font-mono text-sm text-foreground/70;
   }
   .prose-dcyfr blockquote {
-    @apply border-l-4 border-dcyfr-accent-700 pl-4 text-dcyfr-primary-300 italic mb-4;
+    @apply border-l-4 border-primary pl-4 text-muted-foreground italic mb-4;
   }
   .prose-dcyfr table {
     @apply w-full text-sm mb-4;
   }
   .prose-dcyfr th {
-    @apply text-left text-dcyfr-primary-300 font-medium pb-2 border-b border-dcyfr-primary-700/60;
+    @apply text-left text-muted-foreground font-medium pb-2 border-b border-input/60;
   }
   .prose-dcyfr td {
-    @apply py-2 text-dcyfr-primary-200 border-b border-dcyfr-primary-800/60;
+    @apply py-2 text-muted-foreground border-b border-border/60;
   }
   .prose-dcyfr a {
-    @apply text-dcyfr-accent-300 underline underline-offset-2 hover:text-white;
+    @apply text-accent underline underline-offset-2 hover:text-white;
   }
   .prose-dcyfr strong {
     @apply text-white font-semibold;
   }
   .prose-dcyfr hr {
-    @apply border-dcyfr-primary-700/60 my-8;
+    @apply border-input/60 my-8;
   }
 
   @media (prefers-reduced-motion: reduce) {
