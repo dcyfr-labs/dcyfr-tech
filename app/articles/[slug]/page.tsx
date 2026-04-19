@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ArrowLeftIcon } from 'lucide-react';
 import articles from '@/data/articles.json';
 import type { Article } from '@/lib/types';
 import { MarkdownRenderer } from '@/components/MarkdownRenderer';
+import { DcyfrBadge } from '@/components/ui/dcyfr-badge';
+import { DcyfrButton } from '@/components/ui/dcyfr-button';
+import { DcyfrSeparator } from '@/components/ui/dcyfr-separator';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -62,65 +66,97 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
         }}
       />
 
-      <div className="px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
+      <article className="px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-prose">
           {/* Breadcrumb */}
-          <nav className="mb-8 flex items-center gap-2 text-sm text-dcyfr-primary-300" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-white transition-colors">dcyfr.tech</Link>
+          <nav
+            className="mb-8 flex items-center gap-2 text-sm text-dcyfr-primary-300"
+            aria-label="Breadcrumb"
+          >
+            <Link href="/" className="hover:text-white transition-colors">
+              dcyfr.tech
+            </Link>
             <span aria-hidden="true">/</span>
-            <Link href="/articles" className="hover:text-white transition-colors">Articles</Link>
+            <Link href="/articles" className="hover:text-white transition-colors">
+              Articles
+            </Link>
             <span aria-hidden="true">/</span>
-            <span className="text-dcyfr-primary-200" aria-current="page">{article.title}</span>
+            <span className="text-dcyfr-primary-200 truncate" aria-current="page">
+              {article.title}
+            </span>
           </nav>
 
           {/* Header */}
           <header className="mb-10">
             <div className="flex flex-wrap items-center gap-2 mb-4">
-              <span className="rounded-full border border-dcyfr-accent/30 bg-dcyfr-accent/10 text-dcyfr-accent-300 px-2.5 py-0.5 text-xs font-medium">
+              <DcyfrBadge
+                variant="outline"
+                size="sm"
+                className="border-dcyfr-accent/30 bg-dcyfr-accent/10 text-dcyfr-accent-300"
+              >
                 {article.category}
-              </span>
-              <span className="text-xs text-dcyfr-primary-300">{article.readingTime} min read</span>
+              </DcyfrBadge>
+              <DcyfrBadge
+                variant="ghostly"
+                size="sm"
+                className="border-0 bg-transparent text-dcyfr-primary-300"
+              >
+                {article.readingTime} min read
+              </DcyfrBadge>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-4">{article.title}</h1>
-            <p className="text-lg text-dcyfr-primary-300 leading-relaxed mb-6">{article.description}</p>
-            <div className="flex items-center gap-3 text-sm text-dcyfr-primary-300 pb-6 border-b border-dcyfr-primary-800/60">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-4">
+              {article.title}
+            </h1>
+            <p className="text-lg text-dcyfr-primary-300 leading-relaxed mb-6">
+              {article.description}
+            </p>
+            <div className="flex items-center gap-3 text-sm text-dcyfr-primary-300">
               <span>{article.author}</span>
               <span aria-hidden="true">·</span>
               <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
             </div>
+            <DcyfrSeparator className="mt-6 bg-dcyfr-primary-800/60" />
           </header>
 
-          {/* Content */}
+          {/* Content — serif headings wired via .theme-dcyfr-tech in globals.css */}
           <div className="prose-dcyfr">
             <MarkdownRenderer content={article.content} />
           </div>
 
           {/* Tags */}
           {article.tags.length > 0 && (
-            <div className="mt-10 pt-6 border-t border-dcyfr-primary-800/60">
-              <p className="text-xs text-dcyfr-primary-300 mb-2">Tags</p>
-              <div className="flex flex-wrap gap-2">
-                {article.tags.map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/search?q=${encodeURIComponent(tag)}`}
-                    className="rounded-full border border-dcyfr-primary-700/60 bg-dcyfr-primary-800/60 px-2.5 py-0.5 text-xs text-dcyfr-primary-200 hover:border-dcyfr-accent/40 hover:text-white transition-colors"
-                  >
-                    {tag}
-                  </Link>
-                ))}
+            <footer className="mt-10">
+              <DcyfrSeparator className="bg-dcyfr-primary-800/60" />
+              <div className="pt-6">
+                <p className="text-xs text-dcyfr-primary-300 mb-2">Tags</p>
+                <div className="flex flex-wrap gap-2">
+                  {article.tags.map((tag) => (
+                    <DcyfrBadge
+                      key={tag}
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="border-dcyfr-primary-700/60 bg-dcyfr-primary-800/60 text-dcyfr-primary-200 hover:border-dcyfr-accent/40 hover:text-white transition-colors"
+                    >
+                      <Link href={`/search?q=${encodeURIComponent(tag)}`}>{tag}</Link>
+                    </DcyfrBadge>
+                  ))}
+                </div>
               </div>
-            </div>
+            </footer>
           )}
 
           {/* Back link */}
           <div className="mt-10">
-            <Link href="/articles" className="text-sm text-dcyfr-primary-300 hover:text-white transition-colors">
-              ← All articles
-            </Link>
+            <DcyfrButton asChild variant="ghostly" size="sm">
+              <Link href="/articles" className="text-dcyfr-primary-300">
+                <ArrowLeftIcon className="size-4" aria-hidden="true" />
+                All articles
+              </Link>
+            </DcyfrButton>
           </div>
         </div>
-      </div>
+      </article>
     </>
   );
 }

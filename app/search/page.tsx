@@ -1,68 +1,111 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { SearchIcon } from 'lucide-react';
 import articlesData from '@/data/articles.json';
 import type { Article } from '@/lib/types';
 import { ArticleCard } from '@/components/ArticleCard';
+import { DcyfrInput } from '@/components/ui/dcyfr-input';
+import { DcyfrAlert, DcyfrAlertTitle, DcyfrAlertDescription } from '@/components/ui/dcyfr-alert';
+import { DcyfrSkeleton } from '@/components/ui/dcyfr-skeleton';
 
 const articles = articlesData as Article[];
+
+const DEBOUNCE_MS = 300;
 
 function SearchResults() {
   const searchParams = useSearchParams();
   const initialQ = searchParams.get('q') ?? '';
   const [query, setQuery] = useState(initialQ);
+  const [debouncedQuery, setDebouncedQuery] = useState(initialQ);
+  const [isPending, setIsPending] = useState(false);
+
+  // Debounce: isPending true while typing, settles 300ms after last keystroke
+  useEffect(() => {
+    if (query === debouncedQuery) return;
+    setIsPending(true);
+    const handle = setTimeout(() => {
+      setDebouncedQuery(query);
+      setIsPending(false);
+    }, DEBOUNCE_MS);
+    return () => clearTimeout(handle);
+  }, [query, debouncedQuery]);
 
   const results = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return articles.filter(
-      (a) =>
-        a.title.toLowerCase().includes(q) ||
-        a.description.toLowerCase().includes(q) ||
-        a.category.toLowerCase().includes(q) ||
-        a.tags.some((t) => t.toLowerCase().includes(q)) ||
-        a.content.toLowerCase().includes(q),
-    ).sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-  }, [query]);
+    if (!debouncedQuery.trim()) return [];
+    const q = debouncedQuery.toLowerCase();
+    return articles
+      .filter(
+        (a) =>
+          a.title.toLowerCase().includes(q) ||
+          a.description.toLowerCase().includes(q) ||
+          a.category.toLowerCase().includes(q) ||
+          a.tags.some((t) => t.toLowerCase().includes(q)) ||
+          a.content.toLowerCase().includes(q)
+      )
+      .sort(
+        (a, b) =>
+          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      );
+  }, [debouncedQuery]);
 
   return (
     <div>
       <div className="relative mb-8">
-        <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dcyfr-primary-300"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+        <SearchIcon
           aria-hidden="true"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
+          className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-dcyfr-primary-300 z-10"
+        />
+        <DcyfrInput
           type="search"
           autoFocus
           placeholder="Search articles, topics, tags..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full rounded-xl border border-dcyfr-primary-700/60 bg-dcyfr-primary-900/60 pl-10 pr-4 py-3 text-white placeholder-dcyfr-primary-400 focus:border-dcyfr-accent/60 focus:outline-none focus:ring-1 focus:ring-dcyfr-accent/40"
           aria-label="Search articles"
+          className="pl-10 h-11 border-dcyfr-primary-700/60 bg-dcyfr-primary-900/60 text-white placeholder:text-dcyfr-primary-400"
         />
       </div>
 
-      {query.trim() === '' ? (
-        <div className="rounded-xl border border-dcyfr-primary-800/40 bg-dcyfr-primary-900/40 p-10 text-center">
-          <p className="text-dcyfr-primary-300">Enter a search term to find articles.</p>
+      {debouncedQuery.trim() === '' && !isPending ? (
+        <DcyfrAlert variant="info" className="text-dcyfr-primary-300">
+          <SearchIcon aria-hidden="true" />
+          <DcyfrAlertTitle>Start searching</DcyfrAlertTitle>
+          <DcyfrAlertDescription>
+            Enter a term to find articles, categories, or tags.
+          </DcyfrAlertDescription>
+        </DcyfrAlert>
+      ) : isPending ? (
+        <div className="space-y-3" aria-busy="true" aria-live="polite">
+          {[0, 1, 2].map((i) => (
+            <DcyfrSkeleton
+              key={i}
+              variant="shimmer"
+              className="h-24 w-full bg-dcyfr-primary-800/40"
+            />
+          ))}
         </div>
       ) : results.length === 0 ? (
-        <div className="rounded-xl border border-dcyfr-primary-800/40 bg-dcyfr-primary-900/40 p-10 text-center">
-          <p className="text-dcyfr-primary-300">No results for &quot;{query}&quot;.</p>
-          <p className="text-xs text-dcyfr-primary-300 mt-2">Try a different keyword or browse by <Link href="/articles" className="text-dcyfr-accent-300 hover:text-white transition-colors">category</Link>.</p>
-        </div>
+        <DcyfrAlert variant="info" className="text-dcyfr-primary-300">
+          <DcyfrAlertTitle>No results for &quot;{debouncedQuery}&quot;</DcyfrAlertTitle>
+          <DcyfrAlertDescription>
+            Try a different keyword or browse by{' '}
+            <Link
+              href="/articles"
+              className="text-dcyfr-accent-300 hover:text-white transition-colors underline underline-offset-2"
+            >
+              category
+            </Link>
+            .
+          </DcyfrAlertDescription>
+        </DcyfrAlert>
       ) : (
         <div className="space-y-3">
-          <p className="text-xs text-dcyfr-primary-300 mb-4">{results.length} result{results.length !== 1 ? 's' : ''} for &quot;{query}&quot;</p>
+          <p className="text-xs text-dcyfr-primary-300 mb-4" aria-live="polite">
+            {results.length} result{results.length !== 1 ? 's' : ''} for &quot;{debouncedQuery}&quot;
+          </p>
           {results.map((article) => (
             <ArticleCard key={article.id} article={article} variant="compact" />
           ))}
@@ -77,7 +120,9 @@ export default function SearchPage() {
     <div className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <h1 className="text-3xl font-bold text-white mb-2">Search</h1>
-        <p className="text-dcyfr-primary-300 mb-8">Search across all articles, categories, and tags.</p>
+        <p className="text-dcyfr-primary-300 mb-8">
+          Search across all articles, categories, and tags.
+        </p>
         <Suspense>
           <SearchResults />
         </Suspense>
