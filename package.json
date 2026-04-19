@@ -7,7 +7,7 @@
     "dev": "next dev --port 3302",
     "build": "next build",
     "start": "next start --port 3302",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "export:content": "node scripts/export-nexus-content.mjs",
     "test:e2e": "playwright test",

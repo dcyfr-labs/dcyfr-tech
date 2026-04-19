@@ -40,7 +40,7 @@ export default function ArticlesPage() {
   return (
     <div className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
-        <h1 className="text-3xl font-bold text-white mb-2">Articles</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Articles</h1>
         <p className="text-muted-foreground mb-8">
           {articles.length} articles on agent patterns, context engineering, and AI infrastructure.
         </p>
@@ -61,7 +61,7 @@ export default function ArticlesPage() {
             placeholder="Search articles..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-input/60 bg-card/60 pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-muted-foreground focus:border-dcyfr-accent/60 focus:outline-none focus:ring-1 focus:ring-dcyfr-accent/40"
+            className="w-full rounded-xl border border-input/60 bg-card/60 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-secure/60 focus:outline-none focus:ring-1 focus:ring-secure/40"
             aria-label="Search articles"
           />
         </div>
@@ -73,8 +73,8 @@ export default function ArticlesPage() {
             onClick={() => setActiveCategory(null)}
             className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
               activeCategory === null
-                ? 'border-primary bg-primary text-white'
-                : 'border-input/60 bg-muted/40 text-muted-foreground hover:border-dcyfr-accent/40 hover:text-white'
+                ? 'border-primary bg-primary text-foreground'
+                : 'border-input/60 bg-muted/40 text-muted-foreground hover:border-secure/40 hover:text-foreground'
             }`}
           >
             All
@@ -86,8 +86,8 @@ export default function ArticlesPage() {
               onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 activeCategory === cat
-                  ? 'border-primary bg-primary text-white'
-                  : 'border-input/60 bg-muted/40 text-muted-foreground hover:border-dcyfr-accent/40 hover:text-white'
+                  ? 'border-primary bg-primary text-foreground'
+                  : 'border-input/60 bg-muted/40 text-muted-foreground hover:border-secure/40 hover:text-foreground'
               }`}
             >
               {cat}
@@ -102,7 +102,7 @@ export default function ArticlesPage() {
             <button
               type="button"
               onClick={() => { setSearch(''); setActiveCategory(null); }}
-              className="mt-3 text-sm text-accent hover:text-white transition-colors"
+              className="mt-3 text-sm text-accent hover:text-foreground transition-colors"
             >
               Clear filters
             </button>

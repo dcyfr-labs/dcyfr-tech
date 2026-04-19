@@ -65,7 +65,7 @@ function SearchResults() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search articles"
-          className="pl-10 h-11 border-input/60 bg-card/60 text-white placeholder:text-muted-foreground"
+          className="pl-10 h-11 border-input/60 bg-card/60 text-foreground placeholder:text-muted-foreground"
         />
       </div>
 
@@ -94,7 +94,7 @@ function SearchResults() {
             Try a different keyword or browse by{' '}
             <Link
               href="/articles"
-              className="text-accent hover:text-white transition-colors underline underline-offset-2"
+              className="text-accent hover:text-foreground transition-colors underline underline-offset-2"
             >
               category
             </Link>
@@ -119,7 +119,7 @@ export default function SearchPage() {
   return (
     <div className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-3xl font-bold text-white mb-2">Search</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Search</h1>
         <p className="text-muted-foreground mb-8">
           Search across all articles, categories, and tags.
         </p>

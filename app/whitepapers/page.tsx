@@ -21,7 +21,7 @@ export default function WhitepapersPage() {
   return (
     <div className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
-        <h1 className="text-3xl font-bold text-white mb-2">Whitepapers</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Whitepapers</h1>
         <p className="text-muted-foreground mb-10">
           Technical specifications and in-depth research documents from the DCYFR team.
         </p>
@@ -40,14 +40,14 @@ export default function WhitepapersPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="rounded-full border border-dcyfr-accent/30 bg-dcyfr-accent/10 text-accent px-2.5 py-0.5 text-xs font-medium">
+                      <span className="rounded-full border border-secure/30 bg-secure/10 text-accent px-2.5 py-0.5 text-xs font-medium">
                         {wp.category}
                       </span>
                       {wp.pages && (
                         <span className="text-xs text-muted-foreground">{wp.pages} pages</span>
                       )}
                     </div>
-                    <h2 className="text-lg font-semibold text-white mb-2">{wp.title}</h2>
+                    <h2 className="text-lg font-semibold text-foreground mb-2">{wp.title}</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed mb-3">{wp.abstract}</p>
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span>{wp.author}</span>
@@ -59,7 +59,7 @@ export default function WhitepapersPage() {
                     href={wp.downloadUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="shrink-0 flex items-center gap-1.5 rounded-lg border border-input/60 px-3 py-2 text-sm font-medium text-muted-foreground hover:border-dcyfr-accent/40 hover:text-white transition-colors"
+                    className="shrink-0 flex items-center gap-1.5 rounded-lg border border-input/60 px-3 py-2 text-sm font-medium text-muted-foreground hover:border-secure/40 hover:text-foreground transition-colors"
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

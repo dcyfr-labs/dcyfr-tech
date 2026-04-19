@@ -73,11 +73,11 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
             className="mb-8 flex items-center gap-2 text-sm text-muted-foreground"
             aria-label="Breadcrumb"
           >
-            <Link href="/" className="hover:text-white transition-colors">
+            <Link href="/" className="hover:text-foreground transition-colors">
               dcyfr.tech
             </Link>
             <span aria-hidden="true">/</span>
-            <Link href="/articles" className="hover:text-white transition-colors">
+            <Link href="/articles" className="hover:text-foreground transition-colors">
               Articles
             </Link>
             <span aria-hidden="true">/</span>
@@ -92,7 +92,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               <DcyfrBadge
                 variant="outline"
                 size="sm"
-                className="border-dcyfr-accent/30 bg-dcyfr-accent/10 text-accent"
+                className="border-secure/30 bg-secure/10 text-accent"
               >
                 {article.category}
               </DcyfrBadge>
@@ -104,7 +104,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
                 {article.readingTime} min read
               </DcyfrBadge>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-4">
+            <h1 className="text-3xl sm:text-4xl font-bold text-foreground leading-tight mb-4">
               {article.title}
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed mb-6">
@@ -136,7 +136,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
                       asChild
                       variant="outline"
                       size="sm"
-                      className="border-input/60 bg-muted/60 text-muted-foreground hover:border-dcyfr-accent/40 hover:text-white transition-colors"
+                      className="border-input/60 bg-muted/60 text-muted-foreground hover:border-secure/40 hover:text-foreground transition-colors"
                     >
                       <Link href={`/search?q=${encodeURIComponent(tag)}`}>{tag}</Link>
                     </DcyfrBadge>
