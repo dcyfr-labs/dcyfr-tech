@@ -21,21 +21,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout dcyfr-tech-blog
-        uses: actions/checkout@v4
+      # Mint a short-lived installation token from the dcyfr-labs-release
+      # App for the dcyfr/rei-workspace cross-org read. Degrade-safe: if the
+      # App isn't installed in the dcyfr org yet, mint fails non-fatally and
+      # the per-repo DCYFR_WORKSPACE_PAT fallback applies.
+      - name: Mint App token (workspace read)
+        id: workspace-token
+        if: ${{ vars.RELEASE_APP_ID != '' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          owner: dcyfr
+          repositories: rei-workspace
 
-      - name: Checkout dcyfr-workspace (Nexus content)
-        uses: actions/checkout@v4
+      # Separate mint for PR creation (scoped to the current repo). The
+      # default GITHUB_TOKEN cannot create PRs while the org-level
+      # "Allow GitHub Actions to create and approve pull requests" setting is
+      # disabled — using the App token bypasses that restriction centrally.
+      - name: Mint App token (PR creation)
+        id: pr-token
+        if: ${{ vars.RELEASE_APP_ID != '' }}
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
         with:
-          repository: dcyfr/dcyfr-workspace
-          token: ${{ secrets.DCYFR_WORKSPACE_PAT }}
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+      - name: Checkout dcyfr-tech
+        uses: actions/checkout@v6
+
+      - name: Checkout dcyfr/rei-workspace (Nexus content)
+        uses: actions/checkout@v6
+        with:
+          repository: dcyfr/rei-workspace
+          # Priority: App token (central, short-lived) → per-repo PAT.
+          token: ${{ steps.workspace-token.outputs.token || secrets.DCYFR_WORKSPACE_PAT }}
           path: dcyfr-workspace
           sparse-checkout: nexus
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22'
 
@@ -57,7 +84,10 @@ jobs:
         if: steps.changes.outputs.changed == 'true' && github.event.inputs.dry_run != 'true'
         uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # App token (preferred) → GITHUB_TOKEN fallback. GITHUB_TOKEN only
+          # works if the org allows Actions to create PRs; the App token does
+          # not depend on that setting.
+          token: ${{ steps.pr-token.outputs.token || secrets.GITHUB_TOKEN }}
           commit-message: 'content: sync articles from Nexus'
           branch: nexus-content-sync
           title: 'content: Nexus content sync'
