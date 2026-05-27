@@ -55,7 +55,7 @@ jobs:
 
       - name: Create pull request
         if: steps.changes.outputs.changed == 'true' && github.event.inputs.dry_run != 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'content: sync articles from Nexus'
