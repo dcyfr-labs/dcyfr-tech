@@ -14,6 +14,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   export:
@@ -88,6 +89,10 @@ jobs:
           # works if the org allows Actions to create PRs; the App token does
           # not depend on that setting.
           token: ${{ steps.pr-token.outputs.token || secrets.GITHUB_TOKEN }}
+          # Scope the commit to the synced file. Without this,
+          # create-pull-request's default `git add -A` also sweeps the nested
+          # dcyfr-workspace checkout (a gitlink) into the commit.
+          add-paths: data/articles.json
           commit-message: 'content: sync articles from Nexus'
           branch: nexus-content-sync
           title: 'content: Nexus content sync'
@@ -98,3 +103,19 @@ jobs:
             Review the changes to `data/articles.json` before merging.
           labels: content,automated
           delete-branch: true
+
+      # The workflow ran silently red for ~3 months (no PR, no alert). Open a
+      # single deduped tracking issue on any failure so it can't recur silently.
+      # GITHUB_TOKEN can create issues regardless of the PR-approval setting.
+      - name: Open tracking issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open \
+            --search 'Export Nexus workflow failing in:title' --json number --jq 'length')
+          if [ "$open" = "0" ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" \
+              --title 'Export Nexus workflow failing' \
+              --body "Export Nexus Content failed. Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          fi
