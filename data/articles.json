@@ -1,17 +1,23 @@
 [
   {
-    "id": "delegation-framework-deep-dive",
-    "slug": "delegation-framework-deep-dive",
-    "title": "The DCYFR Delegation Framework: Typed Agent Contracts at Scale",
-    "description": "How we built a type-safe delegation system that lets agents hand off work with confidence — covering contracts, error propagation, and approval gates.",
+    "id": "mosh-mobile-agent-approvals",
+    "slug": "mosh-mobile-agent-approvals",
+    "title": "Mobile Agent Approvals with Mosh + Tailscale",
+    "description": "How we replaced SSH-based mobile terminals with Mosh for lower reconnect rates and faster agent approval cycles from iOS.",
     "author": "DCYFR Team",
-    "publishedAt": "2026-03-01T00:00:00Z",
-    "readingTime": 8,
-    "category": "Agent Patterns",
-    "tags": ["delegation", "agents", "typescript", "type-safety"],
-    "content": "## Why Delegation Needs Contracts\n\nIn a multi-agent system, delegation without contracts is a bug waiting to happen. An agent that calls another agent with unvalidated inputs is one schema drift away from a silent failure.\n\nThe DCYFR delegation framework addresses this with typed contracts — TypeScript interfaces that define both the input and output shape of every agent handoff.\n\n```typescript\nimport { delegate } from '@dcyfr/ai';\n\ninterface SummarizeInput {\n  text: string;\n  maxWords: number;\n}\n\ninterface SummarizeOutput {\n  summary: string;\n  wordCount: number;\n}\n\nconst result = await delegate<SummarizeInput, SummarizeOutput>({\n  agent: 'summarizer',\n  input: { text: articleContent, maxWords: 100 },\n});\n```\n\n## Approval Gates\n\nNot all delegations should run autonomously. For high-stakes operations, the framework supports approval gates — points where a human must confirm before execution continues.\n\n```typescript\nconst result = await delegate({\n  agent: 'deploy-agent',\n  input: { environment: 'production', version: '2026.3.1' },\n  requiresApproval: true,\n  approvalTimeout: 300_000, // 5 minutes\n});\n```\n\n## Error Propagation\n\nWhen a subagent fails, errors bubble up with full context — the delegation chain, the input that caused the failure, and the agent that reported it. This makes debugging multi-agent failures dramatically faster.\n\n## Next Steps\n\nThe delegation framework is available as part of `@dcyfr/ai`. See the [snippet library](https://dcyfr.codes) for copy-paste examples.",
-    "featured": true,
-    "sourceFile": "nexus/polaris/agent-patterns/delegation-framework.md"
+    "publishedAt": "2026-03-22T00:00:00Z",
+    "readingTime": 5,
+    "category": "Infrastructure",
+    "tags": [
+      "mosh",
+      "tailscale",
+      "mobile",
+      "approval-workflow",
+      "ios"
+    ],
+    "content": "## The Problem with SSH on Mobile\n\nAgent approval workflows depend on fast terminal access. When an agent pauses for human input, the clock is ticking. SSH on mobile — even over Tailscale — reconnects frequently as the app backgrounds or the network shifts. Each reconnect adds friction.\n\n## Enter Mosh\n\nMosh (Mobile Shell) uses UDP instead of TCP. It maintains a local prediction of the terminal state, so brief network interruptions are invisible. The session persists on the server; the client reconnects seamlessly.\n\n```bash\n#!/usr/bin/env bash\nmosh \\\n  --server=\"$(which mosh-server)\" \\\n  --port=60001 \\\n  --predict=adaptive \\\n  workbench \\\n  -- tmux new-session -A -s main\n```\n\n## The Stack\n\n- **Tailscale** — zero-config VPN, handles NAT traversal\n- **Mosh** — UDP-based shell, tolerates network changes\n- **tmux** — session persistence, named windows for approval flows\n- **Moshi app (iOS)** — Mosh client with custom keyboard presets\n\n## Pilot Results\n\nWe're in week 1 of a 4-week pilot. Early observations: no reconnects during the first 24 hours. Approval latency feels subjectively faster without the reconnect dance.\n\nFull metrics will be published after the pilot concludes on April 19.",
+    "featured": false,
+    "sourceFile": "openspec/changes/moshi-pilot/docs/runbook.md"
   },
   {
     "id": "context-window-budget-management",
@@ -22,23 +28,33 @@
     "publishedAt": "2026-03-10T00:00:00Z",
     "readingTime": 6,
     "category": "Context Engineering",
-    "tags": ["context", "tokens", "budget", "compression"],
+    "tags": [
+      "context",
+      "tokens",
+      "budget",
+      "compression"
+    ],
     "content": "## The Budget Problem\n\nEvery model has a context window. The moment your agent accumulates more tokens than it can fit, you have a choice: truncate, compress, or fail.\n\nMost implementations truncate. The DCYFR approach is to budget proactively.\n\n## The Guard Pattern\n\n```typescript\nconst CHARS_PER_TOKEN = 4;\n\nexport function guardContextBudget(\n  items: string[],\n  maxTokens: number,\n  reserveTokens = 2048,\n): string[] {\n  const limit = (maxTokens - reserveTokens) * CHARS_PER_TOKEN;\n  let total = 0;\n  const result: string[] = [];\n  for (const item of items) {\n    if (total + item.length > limit) break;\n    result.push(item);\n    total += item.length;\n  }\n  return result;\n}\n```\n\nReserve tokens for the model's response. Fill context greedily until the budget is hit, then stop.\n\n## Semantic Compression\n\nWhen recency matters but you can't drop old context, compress it. Summarize earlier turns into a compact representation before adding new ones.\n\nThis is the core idea behind the working memory pattern in `@dcyfr/ai`: keep the last N full turns, compress the rest into a rolling summary.\n\n## Sliding Window vs. Summary\n\n| Strategy | Pros | Cons |\n|----------|------|------|\n| Sliding window | Simple, no information loss for recent turns | Drops old context entirely |\n| Summary | Preserves intent across long runs | Summary quality depends on compression model |\n| Budget guard | Explicit, predictable | Must tune reserve size per model |",
     "featured": false,
     "sourceFile": "nexus/polaris/context-engineering/budget-management.md"
   },
   {
-    "id": "mosh-mobile-agent-approvals",
-    "slug": "mosh-mobile-agent-approvals",
-    "title": "Mobile Agent Approvals with Mosh + Tailscale",
-    "description": "How we replaced SSH-based mobile terminals with Mosh for lower reconnect rates and faster agent approval cycles from iOS.",
+    "id": "delegation-framework-deep-dive",
+    "slug": "delegation-framework-deep-dive",
+    "title": "The DCYFR Delegation Framework: Typed Agent Contracts at Scale",
+    "description": "How we built a type-safe delegation system that lets agents hand off work with confidence — covering contracts, error propagation, and approval gates.",
     "author": "DCYFR Team",
-    "publishedAt": "2026-03-22T00:00:00Z",
-    "readingTime": 5,
-    "category": "Infrastructure",
-    "tags": ["mosh", "tailscale", "mobile", "approval-workflow", "ios"],
-    "content": "## The Problem with SSH on Mobile\n\nAgent approval workflows depend on fast terminal access. When an agent pauses for human input, the clock is ticking. SSH on mobile — even over Tailscale — reconnects frequently as the app backgrounds or the network shifts. Each reconnect adds friction.\n\n## Enter Mosh\n\nMosh (Mobile Shell) uses UDP instead of TCP. It maintains a local prediction of the terminal state, so brief network interruptions are invisible. The session persists on the server; the client reconnects seamlessly.\n\n```bash\n#!/usr/bin/env bash\nmosh \\\n  --server=\"$(which mosh-server)\" \\\n  --port=60001 \\\n  --predict=adaptive \\\n  workbench \\\n  -- tmux new-session -A -s main\n```\n\n## The Stack\n\n- **Tailscale** — zero-config VPN, handles NAT traversal\n- **Mosh** — UDP-based shell, tolerates network changes\n- **tmux** — session persistence, named windows for approval flows\n- **Moshi app (iOS)** — Mosh client with custom keyboard presets\n\n## Pilot Results\n\nWe're in week 1 of a 4-week pilot. Early observations: no reconnects during the first 24 hours. Approval latency feels subjectively faster without the reconnect dance.\n\nFull metrics will be published after the pilot concludes on April 19.",
-    "featured": false,
-    "sourceFile": "openspec/changes/moshi-pilot/docs/runbook.md"
+    "publishedAt": "2026-03-01T00:00:00Z",
+    "readingTime": 8,
+    "category": "Agent Patterns",
+    "tags": [
+      "delegation",
+      "agents",
+      "typescript",
+      "type-safety"
+    ],
+    "content": "## Why Delegation Needs Contracts\n\nIn a multi-agent system, delegation without contracts is a bug waiting to happen. An agent that calls another agent with unvalidated inputs is one schema drift away from a silent failure.\n\nThe DCYFR delegation framework addresses this with typed contracts — TypeScript interfaces that define both the input and output shape of every agent handoff.\n\n```typescript\nimport { delegate } from '@dcyfr/ai';\n\ninterface SummarizeInput {\n  text: string;\n  maxWords: number;\n}\n\ninterface SummarizeOutput {\n  summary: string;\n  wordCount: number;\n}\n\nconst result = await delegate<SummarizeInput, SummarizeOutput>({\n  agent: 'summarizer',\n  input: { text: articleContent, maxWords: 100 },\n});\n```\n\n## Approval Gates\n\nNot all delegations should run autonomously. For high-stakes operations, the framework supports approval gates — points where a human must confirm before execution continues.\n\n```typescript\nconst result = await delegate({\n  agent: 'deploy-agent',\n  input: { environment: 'production', version: '2026.3.1' },\n  requiresApproval: true,\n  approvalTimeout: 300_000, // 5 minutes\n});\n```\n\n## Error Propagation\n\nWhen a subagent fails, errors bubble up with full context — the delegation chain, the input that caused the failure, and the agent that reported it. This makes debugging multi-agent failures dramatically faster.\n\n## Next Steps\n\nThe delegation framework is available as part of `@dcyfr/ai`. See the [snippet library](https://dcyfr.codes) for copy-paste examples.",
+    "featured": true,
+    "sourceFile": "nexus/polaris/agent-patterns/delegation-framework.md"
   }
 ]
