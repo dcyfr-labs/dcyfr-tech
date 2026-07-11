@@ -1,0 +1,18 @@
+# DCYFR Research
+
+> Deep dives into AI agent patterns, context engineering, delegation frameworks, and production-ready AI infrastructure from the DCYFR team.
+
+## Pages
+- [Home](https://dcyfr.tech/): Latest research articles and featured deep dives.
+- [Articles](https://dcyfr.tech/articles): Full article archive.
+- [Whitepapers](https://dcyfr.tech/whitepapers): Long-form research whitepapers.
+- [Search](https://dcyfr.tech/search): Full-text search across all research content.
+
+## Articles
+- [Mobile Agent Approvals with Mosh + Tailscale](https://dcyfr.tech/articles/mosh-mobile-agent-approvals): How we replaced SSH-based mobile terminals with Mosh for lower reconnect rates and faster agent approval cycles from iOS.
+- [Context Window Budget Management for Long-Running Agents](https://dcyfr.tech/articles/context-window-budget-management): Strategies for keeping agents within token limits across multi-turn conversations — including sliding windows, semantic compression, and budget guards.
+- [The DCYFR Delegation Framework: Typed Agent Contracts at Scale](https://dcyfr.tech/articles/delegation-framework-deep-dive): How we built a type-safe delegation system that lets agents hand off work with confidence — covering contracts, error propagation, and approval gates.
+
+## Feeds
+- [RSS](https://dcyfr.tech/rss.xml): RSS feed of published articles.
+- [Sitemap](https://dcyfr.tech/sitemap.xml): Canonical list of all indexable pages.
