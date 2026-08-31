@@ -1,6 +1,119 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@source "../app";
+@source "../components";
+
+/*
+ * next-themes drives the scheme with a class on <html>, not the OS media
+ * query, so the `dark:` variant has to be re-pointed at that class. v4's
+ * default is `prefers-color-scheme`, which would silently mis-target every
+ * `dark:` utility in the tree — and this site is the one where that would be
+ * hardest to notice, because `defaultTheme="light"` means the light branch is
+ * what the baselines capture.
+ */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Semantic-var bridge, migrated out of the deleted tailwind.config.ts.
+ *
+ * The `hsl()` wrappers are carried across verbatim. This site's tokens are
+ * still bare HSL triplets (`222.2 84% 4.9%`), so the wrapper is still
+ * load-bearing: dropping it here would be a silent colour change dressed up
+ * as a build migration. It comes off in the next commit, in the same diff
+ * that replaces the triplets with the contract's full colour values.
+ */
+@theme inline {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  /* DCYFR-specific semantic tokens */
+  --color-secure: hsl(var(--secure));
+  --color-secure-foreground: hsl(var(--secure-foreground));
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+
+  /*
+   * All three radius keys were overridden in the v3 config, so the names are
+   * kept and re-mapped rather than renamed. v4 renames stock `rounded-sm` to
+   * `rounded-xs`, but that rename is only correct where the v3 key was NOT
+   * overridden; here it was, and five call sites in sheet.tsx and
+   * dropdown-menu.tsx depend on it. Twenty-one call sites resolve through
+   * these three lines (12 md, 5 sm, 4 lg).
+   *
+   * `rounded-xl` (9 sites), `rounded-full` (5) and bare `rounded` (2) were
+   * never overridden and are left on v4's stock scale, unrenamed.
+   *
+   * Values do not move in this commit: --radius is 0.25rem under the identity
+   * block, so sm computes calc(4px - 4px) = 0px, md 2px, lg 4px — exactly what
+   * v3 emitted. (The five `rounded-sm` call sites have therefore always
+   * rendered square. Unlike dcyfr-codes, whose 0.125rem made the same
+   * expression an invalid negative length, this one is merely zero, so
+   * nothing was being silently dropped.)
+   */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /*
+   * Only `font-mono` is bridged. `font-sans` and `font-serif` have zero
+   * utility call sites in the repo — `body` and the `h1,h2,h3` rule below
+   * read the raw custom properties directly, not the utilities — so bridging
+   * them would create keys that exist only to be shadowed. The v3 config
+   * carried all three, and its own comment said the point was to make the
+   * identity block authoritative; that is true of the custom properties, and
+   * the utilities were never the channel.
+   *
+   * `--font-mono` reading a custom property of its own name looks like a
+   * cycle and is not one: v4 emits theme keys into `@layer theme` while the
+   * identity block sits in `@layer base`, and base wins over theme regardless
+   * of source order. Proven at dcyfr-codes by byte offset in the built CSS
+   * and again at runtime.
+   */
+  --font-mono: var(--font-mono);
+
+  /*
+   * `transitionTimingFunction.brand` is dropped for zero `ease-brand` call
+   * sites. The raw --ease-brand custom property stays in :root below, so
+   * nothing that reads it directly changes.
+   */
+}
+
+/*
+ * v4 changed the default border colour from gray-200 to `currentColor`, so
+ * every bare `border` utility in the tree would otherwise start painting the
+ * element's text colour. Restoring the default globally is one rule instead
+ * of one edit per call site, it cannot miss a call site, and it is what
+ * shadcn's own v4 migration ships.
+ */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border, currentColor);
+  }
+}
 
 /*
  * Phase 1 semantic CSS variable set per
