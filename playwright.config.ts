@@ -19,6 +19,23 @@ export default defineConfig({
   // new `<name>.png` baseline (the artifact is the exact x86 render). Desktop
   // (1440px) is wide enough that local arm64 captures match CI and may use
   // `npm run test:snapshots:update`.
+  //
+  // ...with one catch that cost a cycle to find: `--update-snapshots` honours
+  // maxDiffPixelRatio too. It rewrites a baseline only when the render fails
+  // the comparison, so a baseline that is WRONG BUT WITHIN TOLERANCE cannot be
+  // refreshed by the documented command — it reports success and changes
+  // nothing. That is how `articles-index-desktop.png` kept depicting four
+  // invisible headings through a deliberate regeneration: the fix it was
+  // supposed to record is a 0.01 ratio, and 0.01 < 0.05. The tolerance blinds
+  // the update mechanism exactly as it blinds the gate, so the fossil is
+  // self-perpetuating. To force it, name the mode explicitly:
+  //
+  //   BASE_URL=<url> npx playwright test e2e/snapshots.spec.ts \
+  //     --project=chromium -g "desktop" --update-snapshots=all
+  //
+  // Keep the `-g "desktop"` filter: `=all` would otherwise rewrite the mobile
+  // baselines from an arm64 capture, which is the one thing the note above
+  // forbids.
   snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}{ext}',
   use: {
     baseURL: process.env.BASE_URL ?? 'https://dcyfr.tech',
