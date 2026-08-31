@@ -109,7 +109,7 @@ export default function HomePage() {
                 href={`/articles?category=${encodeURIComponent(category)}`}
                 className="group rounded-xl border border-input/60 bg-card/60 p-4 hover:border-secure/40 transition-colors"
               >
-                <p className="font-medium text-foreground group-hover:text-accent transition-colors">
+                <p className="font-medium text-foreground group-hover:text-accent-600 transition-colors">
                   {category}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">

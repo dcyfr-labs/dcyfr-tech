@@ -22,7 +22,7 @@ export function ArticleCard({ article, variant = 'full' }: Readonly<ArticleCardP
         className="group flex items-start gap-4 rounded-xl border border-border/40 bg-card/40 p-4 hover:border-secure/30 transition-colors"
       >
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-medium text-foreground group-hover:text-accent transition-colors line-clamp-1">
+          <h3 className="text-sm font-medium text-foreground group-hover:text-accent-600 transition-colors line-clamp-1">
             {article.title}
           </h3>
           <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{article.description}</p>
@@ -36,8 +36,8 @@ export function ArticleCard({ article, variant = 'full' }: Readonly<ArticleCardP
   }
 
   const categoryColors: Record<string, string> = {
-    'Agent Patterns': 'border-secure/30 bg-secure/10 text-accent',
-    'Context Engineering': 'border-secure/30 bg-secure/10 text-accent/70',
+    'Agent Patterns': 'border-secure/30 bg-secure/10 text-accent-600',
+    'Context Engineering': 'border-secure/30 bg-secure/10 text-accent-600/70',
     'RAG': 'border-dcyfr-success/30 bg-dcyfr-success/10 text-dcyfr-success',
     'Code Generation': 'border-dcyfr-warning/30 bg-dcyfr-warning/10 text-dcyfr-warning',
     'Infrastructure': 'border-dcyfr-warning/30 bg-dcyfr-warning/10 text-dcyfr-warning',
@@ -59,7 +59,7 @@ export function ArticleCard({ article, variant = 'full' }: Readonly<ArticleCardP
       </div>
 
       <h3 className={clsx(
-        'font-semibold text-foreground group-hover:text-accent transition-colors leading-snug',
+        'font-semibold text-foreground group-hover:text-accent-600 transition-colors leading-snug',
         variant === 'featured' ? 'text-lg' : 'text-base',
       )}>
         {article.title}

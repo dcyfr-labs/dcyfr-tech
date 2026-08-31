@@ -94,7 +94,7 @@ function SearchResults() {
             Try a different keyword or browse by{' '}
             <Link
               href="/articles"
-              className="text-accent hover:text-foreground transition-colors underline underline-offset-2"
+              className="text-accent-600 hover:text-foreground transition-colors underline underline-offset-2"
             >
               category
             </Link>
