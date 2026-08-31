@@ -139,6 +139,17 @@ jobs:
             echo "url=${{ github.event.deployment_status.target_url }}" >> "$GITHUB_OUTPUT"
           fi
 
+      # Runs before the snapshot suite on purpose. The pixel gate cannot see
+      # invisible text: four white-on-white headings measured 0.01 of the
+      # image against a 0.05 tolerance, so the baseline certified them for
+      # four months. Contrast is measured, not diffed, and needs no baseline.
+      - name: Run contrast gate (light + dark)
+        env:
+          BASE_URL: ${{ steps.base.outputs.url }}
+          CI: "true"
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: npm run test:contrast
+
       - name: Run snapshot suite
         env:
           BASE_URL: ${{ steps.base.outputs.url }}

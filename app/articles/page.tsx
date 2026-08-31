@@ -67,13 +67,20 @@ export default function ArticlesPage() {
         </div>
 
         {/* Category filter */}
+        {/* The selected chip pairs bg-primary with text-primary-foreground, not
+            text-foreground. The 2026-04-19 theme-blind sweep rewrote the old
+            `text-white` to `text-foreground` uniformly, which is right on the
+            page ground but wrong on a filled one: under the dcyfr.tech identity
+            --primary is deep indigo and --foreground is near-black, so the
+            selected chip measured 1.40:1. Every fill token has its own
+            *-foreground partner for exactly this. */}
         <div className="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter by category">
           <button
             type="button"
             onClick={() => setActiveCategory(null)}
             className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
               activeCategory === null
-                ? 'border-primary bg-primary text-foreground'
+                ? 'border-primary bg-primary text-primary-foreground'
                 : 'border-input/60 bg-muted/40 text-muted-foreground hover:border-secure/40 hover:text-foreground'
             }`}
           >
@@ -86,7 +93,7 @@ export default function ArticlesPage() {
               onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 activeCategory === cat
-                  ? 'border-primary bg-primary text-foreground'
+                  ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-input/60 bg-muted/40 text-muted-foreground hover:border-secure/40 hover:text-foreground'
               }`}
             >

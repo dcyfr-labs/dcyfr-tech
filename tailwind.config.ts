@@ -67,6 +67,20 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      // Without these the `font-sans` / `font-mono` / `font-serif` utilities
+      // emit Tailwind's stock stacks rather than the identity vars, so
+      // `.theme-dcyfr-tech` is not authoritative for anything carrying them.
+      // Nothing moves today: `<body>` has no font utility, so the base rule
+      // reading --font-sans already wins, and the two `font-mono` uses in
+      // .prose-dcyfr resolve to the same first available face either way.
+      // It matters because the identity block cannot otherwise change the
+      // type of the site it names. Same gap found at dcyfr-bot and
+      // dcyfr-codes, where it did have a visible consequence.
+      fontFamily: {
+        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-serif)', 'ui-serif', 'Georgia', 'serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
       transitionTimingFunction: {
         brand: 'var(--ease-brand)',
       },

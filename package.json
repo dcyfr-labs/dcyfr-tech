@@ -12,6 +12,7 @@
     "export:content": "node scripts/export-nexus-content.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:contrast": "playwright test e2e/contrast.spec.ts --project=chromium",
     "test:snapshots": "playwright test e2e/snapshots.spec.ts --project=chromium",
     "test:snapshots:update": "playwright test e2e/snapshots.spec.ts --project=chromium --update-snapshots"
   },
