@@ -58,6 +58,12 @@ const FOOTER_COLUMNS = [
   },
 ];
 
+const LEGAL_LINKS = [
+  { href: '/privacy', label: 'Privacy' },
+  { href: 'https://dcyfr.ai/terms', label: 'Terms', external: true },
+  { href: 'https://dcyfr.ai/security', label: 'Security', external: true },
+];
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     // data-identity selects the theme package; the .theme-dcyfr-tech class is
@@ -86,6 +92,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                   tagline: 'Research and technical writing from the DCYFR team.',
                 }}
                 columns={FOOTER_COLUMNS}
+                legal={LEGAL_LINKS}
               />
             }
             padding="none"
