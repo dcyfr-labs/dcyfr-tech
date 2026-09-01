@@ -36,8 +36,14 @@ export function ArticleCard({ article, variant = 'full' }: Readonly<ArticleCardP
   }
 
   const categoryColors: Record<string, string> = {
-    'Agent Patterns': 'border-secure/30 bg-secure/10 text-accent-600',
-    'Context Engineering': 'border-secure/30 bg-secure/10 text-accent-600/70',
+    // The two `secure` rows were the only ones not following this map's own
+    // `border-X/30 bg-X/10 text-X` shape: they wore the accent ramp over a
+    // secure-tinted fill, at 4.42:1 light / 4.16:1 dark against AA's 4.5, and
+    // `Context Engineering` additionally carried a /70 alpha that dropped it
+    // further. `text-secure` is 5.69:1 / 5.91:1 and matches the `secure`
+    // variant in components/ui/dcyfr-badge.tsx.
+    'Agent Patterns': 'border-secure/30 bg-secure/10 text-secure',
+    'Context Engineering': 'border-secure/30 bg-secure/10 text-secure',
     'RAG': 'border-dcyfr-success/30 bg-dcyfr-success/10 text-dcyfr-success',
     'Code Generation': 'border-dcyfr-warning/30 bg-dcyfr-warning/10 text-dcyfr-warning',
     'Infrastructure': 'border-dcyfr-warning/30 bg-dcyfr-warning/10 text-dcyfr-warning',
