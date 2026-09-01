@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
 const DcyfrTechLogo = (
   <span className="text-lg font-semibold tracking-tight">
-    dcyfr<span className="text-accent">.tech</span>
+    dcyfr<span className="text-accent-600">.tech</span>
   </span>
 );
 
@@ -66,12 +66,20 @@ const LEGAL_LINKS = [
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} theme-dcyfr-tech`}>
+    // data-identity selects the theme package; the .theme-dcyfr-tech class is
+    // kept so the dcyfr-site-scaffold identity-class check still has a subject
+    // and re-branding later is a one-value swap rather than a re-wire.
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} theme-dcyfr-tech`}
+      data-identity="slate"
+    >
       <body>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border focus:border-accent focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground focus:outline-none"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border focus:border-accent-600 focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground focus:outline-none"
           >
             Skip to main content
           </a>

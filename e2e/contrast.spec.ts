@@ -15,6 +15,13 @@ import { test, expect } from '@playwright/test';
  * Pixels are the wrong instrument for this. Contrast is the right one, and it
  * needs no baseline, so it cannot go stale the way that PNG did.
  *
+ * There is no accent exemption here any more. This gate used to skip the
+ * identity's editorial gold, which was knowingly below AA on the light ground
+ * (2.13:1 on the nav logo, 1.90:1 on category badges), on the grounds that the
+ * engine adoption would resolve it. That adoption is this commit: the gold is
+ * gone, the twelve brand call sites moved to the accent-600 ramp, and they are
+ * now measured like everything else.
+ *
  * Dark is driven through localStorage rather than `emulateMedia`, because
  * next-themes only consults `prefers-color-scheme` when the resolved theme is
  * "system". With `defaultTheme="light"` and no stored choice it resolves
@@ -31,18 +38,6 @@ const ROUTES = [
 const THEMES = ['light', 'dark'] as const;
 
 /**
- * The dcyfr.tech identity accent (`--accent: 38 92% 50%`, editorial gold) is
- * knowingly below AA as text on the light ground — 2.13:1 on the nav logo,
- * 1.90:1 on category badges. It is left alone here on purpose: it is the
- * brand pair, and resolving the brand-versus-interaction split for `--accent`
- * belongs to the engine adoption (dcyfr-satellite-engine-adoption Task 4),
- * which then empties this identity block entirely. Delete this exemption when
- * that lands — if the accent is still failing afterwards, that is a real
- * regression and this gate should say so.
- */
-const IDENTITY_ACCENT_RGB = [245, 159, 10] as const;
-
-/**
  * Floor for "the page actually rendered". The thinnest of these routes
  * measures ~40 text elements; well under that means a shell with no content,
  * which would pass the contrast assertion vacuously.
@@ -50,7 +45,7 @@ const IDENTITY_ACCENT_RGB = [245, 159, 10] as const;
 const MIN_TEXT_ELEMENTS = 20;
 
 /** Serialized into the page; keep it dependency-free. */
-function collectFailures(accent: readonly number[]) {
+function collectFailures() {
   const parse = (c: string) => {
     const m = c.match(/rgba?\(([^)]+)\)/);
     if (!m) return null;
@@ -118,7 +113,6 @@ function collectFailures(accent: readonly number[]) {
 
     const fg = parse(s.color);
     if (!fg) return;
-    if (fg.r === accent[0] && fg.g === accent[1] && fg.b === accent[2]) return;
 
     const ground = groundOf(el);
     const contrast = ratio(over(fg, ground), ground);
@@ -162,7 +156,7 @@ for (const theme of THEMES) {
       // itself, or the walk below inspects a shell and reports nothing.
       await page.locator('h1').first().waitFor({ state: 'visible', timeout: 5000 });
 
-      const { measured, failures } = await page.evaluate(collectFailures, IDENTITY_ACCENT_RGB);
+      const { measured, failures } = await page.evaluate(collectFailures);
 
       // A gate that measures nothing passes everything. That is precisely how
       // the screenshot baseline came to certify invisible headings, so this

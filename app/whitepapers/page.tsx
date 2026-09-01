@@ -40,7 +40,7 @@ export default function WhitepapersPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="rounded-full border border-secure/30 bg-secure/10 text-accent px-2.5 py-0.5 text-xs font-medium">
+                      <span className="rounded-full border border-secure/30 bg-secure/10 text-accent-600 px-2.5 py-0.5 text-xs font-medium">
                         {wp.category}
                       </span>
                       {wp.pages && (

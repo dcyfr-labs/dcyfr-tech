@@ -109,7 +109,7 @@ export default function ArticlesPage() {
             <button
               type="button"
               onClick={() => { setSearch(''); setActiveCategory(null); }}
-              className="mt-3 text-sm text-accent hover:text-foreground transition-colors"
+              className="mt-3 text-sm text-accent-600 hover:text-foreground transition-colors"
             >
               Clear filters
             </button>
