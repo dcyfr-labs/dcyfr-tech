@@ -5,7 +5,7 @@
 /*
  * Phase 1 semantic CSS variable set per
  * openspec/changes/dcyfr-skeleton-sites-scaffolding/spec.md §1.
- * .theme-dcyfr-tech identity staged but not yet applied to <html>.
+ * .theme-dcyfr-tech is applied to <html> in app/layout.tsx.
  */
 
 @layer base {
@@ -96,12 +96,23 @@
     color: hsl(var(--foreground));
   }
 
-  /* Prose styles for article content — preserved from legacy preset pages */
+  /*
+   * Prose styles for article content — preserved from legacy preset pages.
+   *
+   * h2/h3/strong and the link hover carried `text-white` until now. That is a
+   * survivor of the 2026-04-19 theme-blind sweep (87e9b44), which converted
+   * every `text-white` in the .tsx files to `text-foreground` but could not
+   * see these: the sweep's new `no-hardcoded-colors` rule inspects className
+   * string literals, so a color inside an `@apply` in a CSS file is invisible
+   * to it. The site's ground had already flipped light the day before, so
+   * every article's section headings have rendered white-on-white — measured
+   * 1.00:1, literally invisible — since then.
+   */
   .prose-dcyfr h2 {
-    @apply text-xl font-semibold text-white mt-8 mb-3;
+    @apply text-xl font-semibold text-foreground mt-8 mb-3;
   }
   .prose-dcyfr h3 {
-    @apply text-lg font-semibold text-white mt-6 mb-2;
+    @apply text-lg font-semibold text-foreground mt-6 mb-2;
   }
   .prose-dcyfr p {
     @apply text-muted-foreground leading-relaxed mb-4;
@@ -141,10 +152,10 @@
     @apply py-2 text-muted-foreground border-b border-border/60;
   }
   .prose-dcyfr a {
-    @apply text-accent underline underline-offset-2 hover:text-white;
+    @apply text-accent underline underline-offset-2 hover:text-foreground;
   }
   .prose-dcyfr strong {
-    @apply text-white font-semibold;
+    @apply text-foreground font-semibold;
   }
   .prose-dcyfr hr {
     @apply border-input/60 my-8;

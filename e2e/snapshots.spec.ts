@@ -27,10 +27,19 @@ const ROUTES = [
 for (const route of ROUTES) {
   for (const vp of VIEWPORTS) {
     test(`${route.name} @ ${vp.name}`, async ({ page }) => {
-      // colorScheme lock — pre-migration hardcoded palette was effectively
-      // dark-only; baselines preserved against dark-mode render. See
-      // openspec/changes/dcyfr-palette-class-migration spec §2.2.
-      await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
+      // Light, deliberately: ThemeProvider sets defaultTheme="light", so
+      // that is what a first-time visitor gets and what these baselines
+      // must show.
+      //
+      // This used to pass `colorScheme: 'dark'` with a comment claiming the
+      // baselines were "preserved against dark-mode render". They never
+      // were. next-themes only consults prefers-color-scheme when the
+      // resolved theme is "system"; with an explicit defaultTheme and no
+      // stored choice it resolves "light" and never adds `.dark`. The
+      // emulation changed nothing, so the assertion read as dark coverage
+      // while capturing light. Dark is now covered for real in
+      // contrast.spec.ts, which drives the theme the way the app does.
+      await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto(route.path, { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(1500);
