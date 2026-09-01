@@ -46,13 +46,51 @@ const MIN_TEXT_ELEMENTS = 20;
 
 /** Serialized into the page; keep it dependency-free. */
 function collectFailures() {
-  const parse = (c: string) => {
-    const m = c.match(/rgba?\(([^)]+)\)/);
-    if (!m) return null;
-    const p = m[1].split(',').map((s) => parseFloat(s.trim()));
-    return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
-  };
   type C = { r: number; g: number; b: number; a: number };
+
+  // Colour parsing goes through the browser's own painter rather than a
+  // regex. Tailwind v4 compiles every `/<alpha>` modifier to
+  // `color-mix(in oklab, …)`, which getComputedStyle serialises as
+  // `oklab(0.71 -0.008 -0.034 / 0.6)` — not `rgb()`. The regex this gate
+  // shipped with matched `rgba?()` only, returned null for those, and the
+  // caller below skipped the element outright. So the tokens most likely to
+  // be mispaired, the translucent ones, were the exact tokens never measured,
+  // and the gate reported a clean sweep by not looking. Painting one pixel and
+  // reading it back handles rgb/hsl/oklab/lab/color-mix uniformly and yields
+  // the sRGB values the user actually sees.
+  //
+  // This was found while porting the gate to the other six fleet sites: the
+  // port passed 14/14 against a production build that visibly had the defect.
+  const cv = document.createElement('canvas');
+  cv.width = 1;
+  cv.height = 1;
+  const ctx = cv.getContext('2d', { willReadFrequently: true });
+
+  const parse = (c: string): C | null => {
+    if (!c) return null;
+    const m = c.match(/^rgba?\(([^)]+)\)$/);
+    if (m) {
+      const p = m[1].split(/[,\s/]+/).filter(Boolean).map(parseFloat);
+      if (p.length >= 3 && p.every((n) => !Number.isNaN(n))) {
+        return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+      }
+    }
+    if (!ctx) return null;
+    ctx.clearRect(0, 0, 1, 1);
+    // An unsupported value leaves fillStyle at its previous setting, which
+    // would silently report the LAST colour again. Set a known sentinel and
+    // require that the assignment actually moved it.
+    ctx.fillStyle = '#000000';
+    const before = ctx.fillStyle;
+    ctx.fillStyle = c;
+    if (ctx.fillStyle === before && !/^(#000000|black|rgb\(0, ?0, ?0\))$/i.test(c.trim())) {
+      return null;
+    }
+    ctx.fillRect(0, 0, 1, 1);
+    const d = ctx.getImageData(0, 0, 1, 1).data;
+    return { r: d[0], g: d[1], b: d[2], a: d[3] / 255 };
+  };
+
   const over = (f: C, b: C): C => ({
     r: f.r * f.a + b.r * (1 - f.a),
     g: f.g * f.a + b.g * (1 - f.a),
@@ -97,6 +135,7 @@ function collectFailures() {
   };
 
   const out: { text: string; cls: string; ratio: number; need: number }[] = [];
+  const unparsed: string[] = [];
   let measured = 0;
   document.querySelectorAll('*').forEach((el) => {
     const text = Array.from(el.childNodes)
@@ -108,11 +147,24 @@ function collectFailures() {
 
     const s = getComputedStyle(el);
     if (s.visibility === 'hidden' || s.display === 'none' || parseFloat(s.opacity) === 0) return;
+    // Screen-reader-only text is not a contrast defect. The `sr-only` idiom
+    // (this site uses it for the skip link in app/layout.tsx) collapses the box
+    // to 1x1 and clips it away rather than hiding it, so it survives a
+    // `width === 0` guard and can then report 1:1 for text no sighted user can
+    // see. A box this small cannot hold a glyph, so the dimension test is the
+    // honest one: it catches `sr-only` in both Tailwind v3 (`clip`) and v4
+    // (`clip-path: inset(50%)`) without hard-coding either. Focus-revealed
+    // variants resize on focus, and this gate walks resting style.
     const rect = el.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
+    if (rect.width <= 1 || rect.height <= 1) return;
 
     const fg = parse(s.color);
-    if (!fg) return;
+    if (!fg) {
+      // Never skip silently. An unreadable colour is a hole in the gate, and
+      // a hole in the gate is how the defect this file exists for survived.
+      unparsed.push(`${s.color} on <${el.tagName.toLowerCase()}> "${text.slice(0, 30)}"`);
+      return;
+    }
 
     const ground = groundOf(el);
     const contrast = ratio(over(fg, ground), ground);
@@ -131,7 +183,7 @@ function collectFailures() {
       });
     }
   });
-  return { measured, failures: out };
+  return { measured, failures: out, unparsed };
 }
 
 for (const theme of THEMES) {
@@ -156,7 +208,15 @@ for (const theme of THEMES) {
       // itself, or the walk below inspects a shell and reports nothing.
       await page.locator('h1').first().waitFor({ state: 'visible', timeout: 5000 });
 
-      const { measured, failures } = await page.evaluate(collectFailures);
+      const { measured, failures, unparsed } = await page.evaluate(collectFailures);
+
+      // A colour this gate cannot read is a colour it cannot judge. Fail on
+      // the hole itself rather than trusting a result produced by not looking.
+      expect(
+        unparsed,
+        `Unparseable colours on ${route} — these elements were NOT measured:\n` +
+          unparsed.join('\n'),
+      ).toEqual([]);
 
       // A gate that measures nothing passes everything. That is precisely how
       // the screenshot baseline came to certify invisible headings, so this

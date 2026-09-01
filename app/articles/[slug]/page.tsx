@@ -92,7 +92,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               <DcyfrBadge
                 variant="outline"
                 size="sm"
-                className="border-secure/30 bg-secure/10 text-accent-600"
+                className="border-secure/30 bg-secure/10 text-secure"
               >
                 {article.category}
               </DcyfrBadge>

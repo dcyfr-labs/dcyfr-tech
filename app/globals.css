@@ -335,14 +335,32 @@
   .prose-dcyfr ol li {
     @apply list-decimal;
   }
+  /*
+   * Inline code was `text-accent-600/70`, which measured 2.90:1 in light and
+   * 2.36:1 in dark on this `bg-muted` chip — every inline code span in every
+   * article was below AA. The gate in e2e/contrast.spec.ts did not report it
+   * because a `/70` modifier compiles to `color-mix(in oklab, …)` and the
+   * gate's old regex parser could not read that, so it skipped the element
+   * entirely. Both halves of that are fixed together.
+   *
+   * The ramp splits by scheme because it has to: 600 is 4.72:1 on the light
+   * chip but only 3.39:1 on the dark one, and 400 is 6.78:1 dark but 2.30:1
+   * light. There is no single step that clears AA in both.
+   */
   .prose-dcyfr code:not(pre code) {
-    @apply font-mono text-sm bg-muted text-accent-600/70 px-1.5 py-0.5 rounded;
+    @apply font-mono text-sm bg-muted text-accent-600 dark:text-accent-400 px-1.5 py-0.5 rounded;
   }
   .prose-dcyfr pre {
     @apply bg-card border border-input/60 rounded-xl p-4 overflow-x-auto mb-4;
   }
+  /*
+   * `text-foreground/70` clears AA on this surface, so this is not a defect
+   * fix — it is the same alpha-on-a-text-token shape as the rule above, and
+   * leaving one instance behind is how the next person concludes the pattern
+   * is sanctioned. Code blocks are the last place to spend contrast.
+   */
   .prose-dcyfr pre code {
-    @apply font-mono text-sm text-foreground/70;
+    @apply font-mono text-sm text-foreground;
   }
   .prose-dcyfr blockquote {
     @apply border-l-4 border-primary pl-4 text-muted-foreground italic mb-4;
