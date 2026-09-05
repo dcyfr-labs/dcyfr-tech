@@ -42,7 +42,13 @@ for (const route of ROUTES) {
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto(route.path, { waitUntil: 'domcontentloaded' });
+      // The fixed wait is a floor for hydration and layout, not the font
+      // gate. Geist is self-hosted through next/font/local and swaps in
+      // whenever the woff2 lands, so the capture waits on the face itself.
+      // Geist Mono ships adjustFontFallback: false, so its text has no
+      // size-adjusted fallback and shifts once on load.
       await page.waitForTimeout(1500);
+      await page.evaluate(() => document.fonts.ready);
       await expect(page).toHaveScreenshot(`${route.name}-${vp.name}.png`, {
         fullPage: true,
         maxDiffPixelRatio: 0.05,

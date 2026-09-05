@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-`dcyfr.tech` is a Next.js 15 / React 19 research and technical publishing hub for the DCYFR ecosystem.
+`dcyfr.tech` is a Next.js 16 / React 19 research and technical publishing hub for the DCYFR ecosystem.
 
 ## Architecture
 

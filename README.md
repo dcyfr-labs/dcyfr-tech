@@ -2,7 +2,7 @@
 
 Research hub, whitepapers, and technical deep-dives for the DCYFR ecosystem, live at **[dcyfr.tech](https://dcyfr.tech)**.
 
-`dcyfr.tech` is a Next.js 15 / React 19 research and technical publishing hub: articles, whitepapers, full-text search, and an RSS feed. **Article content is machine-synced, not hand-edited** — an automated pipeline exports it from the Nexus knowledge system (see below), so publishing happens upstream, not in this repo. It is part of the dcyfr-labs site family alongside [dcyfr-io](https://github.com/dcyfr-labs/dcyfr-io), [dcyfr-app](https://github.com/dcyfr-labs/dcyfr-app), [dcyfr-bot](https://github.com/dcyfr-labs/dcyfr-bot), [dcyfr-build](https://github.com/dcyfr-labs/dcyfr-build), [dcyfr-codes](https://github.com/dcyfr-labs/dcyfr-codes), and [dcyfr-work](https://github.com/dcyfr-labs/dcyfr-work).
+`dcyfr.tech` is a Next.js 16 / React 19 research and technical publishing hub: articles, whitepapers, full-text search, and an RSS feed. **Article content is machine-synced, not hand-edited** — an automated pipeline exports it from the Nexus knowledge system (see below), so publishing happens upstream, not in this repo. It is part of the dcyfr-labs site family alongside [dcyfr-io](https://github.com/dcyfr-labs/dcyfr-io), [dcyfr-app](https://github.com/dcyfr-labs/dcyfr-app), [dcyfr-bot](https://github.com/dcyfr-labs/dcyfr-bot), [dcyfr-build](https://github.com/dcyfr-labs/dcyfr-build), [dcyfr-codes](https://github.com/dcyfr-labs/dcyfr-codes), and [dcyfr-work](https://github.com/dcyfr-labs/dcyfr-work).
 
 ## Content pipeline
 
@@ -12,8 +12,8 @@ Research hub, whitepapers, and technical deep-dives for the DCYFR ecosystem, liv
 
 ## Stack
 
-- Next.js 15 (App Router) / React 19 / Tailwind CSS
-- shadcn primitives from the `@dcyfr-labs` registry (`registry.dcyfr.ai`); shared chrome in [`components/chrome/`](components/chrome/README.md)
+- Next.js 16 (App Router) / React 19 / Tailwind CSS
+- shadcn primitives from the `@dcyfr-labs` registry (`registry.dcyfr.ai`); registry chrome v2 (`@dcyfr-labs/dcyfr-chrome-v2`) in `components/chrome/`, with its hooks in `hooks/` and its utility classes in `app/dcyfr-chrome.css`
 - Sentry instrumentation (client, server, and edge configs)
 - Playwright for e2e and visual-regression snapshots ([`e2e/`](e2e/README.md))
 
@@ -67,5 +67,8 @@ Deployed on Vercel from `main`, with hardened security headers via `vercel.json`
 ## Further docs
 
 - [`AGENTS.md`](AGENTS.md) — agent conventions and project structure
-- [`components/chrome/README.md`](components/chrome/README.md) — shared chrome primitives
 - [`e2e/README.md`](e2e/README.md) — test suite notes
+
+The chrome components are registry-owned and carry no site-local README: read
+them at `@dcyfr-labs/dcyfr-chrome-v2` in `dcyfr-labs/dcyfr-labs-registry`, and
+re-run the add command to take an update rather than editing them here.
