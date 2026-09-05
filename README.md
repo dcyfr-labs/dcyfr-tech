@@ -13,7 +13,7 @@ Research hub, whitepapers, and technical deep-dives for the DCYFR ecosystem, liv
 ## Stack
 
 - Next.js 15 (App Router) / React 19 / Tailwind CSS
-- shadcn primitives from the `@dcyfr-labs` registry (`registry.dcyfr.ai`); shared chrome in [`components/chrome/`](components/chrome/README.md)
+- shadcn primitives from the `@dcyfr-labs` registry (`registry.dcyfr.ai`); registry chrome v2 (`@dcyfr-labs/dcyfr-chrome-v2`) in `components/chrome/`, with its hooks in `hooks/` and its utility classes in `app/dcyfr-chrome.css`
 - Sentry instrumentation (client, server, and edge configs)
 - Playwright for e2e and visual-regression snapshots ([`e2e/`](e2e/README.md))
 
@@ -67,5 +67,8 @@ Deployed on Vercel from `main`, with hardened security headers via `vercel.json`
 ## Further docs
 
 - [`AGENTS.md`](AGENTS.md) — agent conventions and project structure
-- [`components/chrome/README.md`](components/chrome/README.md) — shared chrome primitives
 - [`e2e/README.md`](e2e/README.md) — test suite notes
+
+The chrome components are registry-owned and carry no site-local README: read
+them at `@dcyfr-labs/dcyfr-chrome-v2` in `dcyfr-labs/dcyfr-labs-registry`, and
+re-run the add command to take an update rather than editing them here.

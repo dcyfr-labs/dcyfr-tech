@@ -21,6 +21,25 @@
 @import "./dcyfr-theme-engine.css";
 @import "./dcyfr-theme-slate.css";
 
+/*
+ * The chrome v2 utility classes, installed from the same registry:
+ *
+ *   npx shadcn@latest add @dcyfr-labs/dcyfr-chrome-utilities
+ *
+ * (the v2 chrome block chains it, so installing the block writes this file
+ * too.) It is a `registry:style` item: the add command writes
+ * app/dcyfr-chrome.css and touches nothing else, so this import is the only
+ * thing that loads it. Without the line the site installs the chrome, renders
+ * every component, and silently leaves `touch-target`, `transition-base` and
+ * `transition-fast` undefined — no build, lint or type error, just hit areas
+ * below 44px and a chevron that jumps instead of rotating.
+ * scripts/check-theme-wiring.mjs gates the import for that reason.
+ *
+ * The other two class names the v2 components carry, `site-header` and
+ * `site-footer`, are bare hooks with no rules in the registry or here.
+ */
+@import "./dcyfr-chrome.css";
+
 @source "../app";
 @source "../components";
 
@@ -271,14 +290,17 @@
  * The `body` rule keeps its two colour declarations and loses its
  * font-family, which is the opposite of what the equivalent commit at
  * dcyfr-codes did. Dropping the whole rule was tried here first and the
- * contrast gate caught it: the skip link is the one element rendered OUTSIDE
- * PageShell, so PageShell's `bg-background` is not an ancestor of it, and
+ * contrast gate caught it: the skip link was the one element rendered OUTSIDE
+ * PageShell, so PageShell's `bg-background` was not an ancestor of it, and
  * with <body> transparent the gate's ground walk ran off the top of the
  * document and composited near-white dark-mode text against white — 1.00:1,
  * on all three dark routes. That is the same shape as the white-on-white
- * headings this gate was written for, arriving from the opposite direction,
- * which is a fair argument for keeping the ground on <body> where overscroll
- * and any other out-of-shell content can reach it.
+ * headings this gate was written for, arriving from the opposite direction.
+ *
+ * Chrome v2 removed PageShell, so this rule is now the only thing painting
+ * the ground at all: the header, main and footer are siblings under <body>
+ * with no wrapper between them. Deleting it would take the whole page down,
+ * not just the skip link.
  *
  * font-family is a different matter and stays deleted: the engine owns it on
  * <body> via --font-body, and this file's copy would shadow it. The
