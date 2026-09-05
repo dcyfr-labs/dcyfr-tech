@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeProvider } from '@/components/chrome/theme-provider';
@@ -7,8 +8,6 @@ import { SiteHeader, type HeaderNavItem } from '@/components/chrome/site-header'
 import { SiteFooter, type FooterLink } from '@/components/chrome/site-footer';
 import type { ChromeNavSection } from '@/components/chrome/nav-utils';
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
 
 export const metadata: Metadata = {
   title: {
@@ -110,11 +109,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     // Both stay on <html>. The engine's dark selector is the compound
     // [data-identity="slate"].dark, so a stamp that slipped to <body> would
     // still render, silently without the dark scheme.
+    //
+    // The two font variables are bound here rather than in a chrome file
+    // because the rei audit's font check reads app/layout.tsx and nothing
+    // else: a GeistSans.variable bound anywhere deeper reads as UNRESOLVED.
     <html
       lang="en"
       suppressHydrationWarning
       data-identity="slate"
-      className={`theme-dcyfr-tech ${inter.variable}`}
+      className={`theme-dcyfr-tech ${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body className="flex min-h-dvh flex-col">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>

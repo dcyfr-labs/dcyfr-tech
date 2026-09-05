@@ -148,15 +148,25 @@
   --radius-sm: calc(var(--radius) - 4px);
 
   /*
-   * No font mapping. `font-sans` and `font-serif` had zero call sites even
-   * before this commit, and --font-mono is deliberately NOT bridged: the
-   * contract declares it as a raw variable in @layer base, which outranks
-   * v4's @layer theme default, so the two `@apply font-mono` uses in
+   * next/font loads Geist Sans under --font-geist-sans (bound on <html> in
+   * app/layout.tsx). Mapping it here keeps the `font-sans` utility meaning
+   * this site's body face rather than v4's stock stack. The engine binds
+   * <body> to --font-body independently, and the :root hooks below are what
+   * fill that, so the two routes agree without either one reading the other.
+   *
+   * The utility still has zero call sites here, as `font-serif` does. The
+   * mapping is fleet consistency rather than a live dependency.
+   *
+   * --font-mono is deliberately NOT bridged, even though Geist Mono is now
+   * loaded: the contract declares it as a raw variable in @layer base, which
+   * outranks v4's @layer theme default, so the two `@apply font-mono` uses in
    * .prose-dcyfr already resolve to the theme's stack and agree with the
-   * engine's own code/kbd/samp/pre binding for free. Bridging it would also
-   * reintroduce the self-referential key the previous commit had to reason
-   * about; not needing it at all is better than proving it safe.
+   * engine's own code/kbd/samp/pre binding, which --font-mono-loaded below
+   * now fills with Geist Mono. Bridging it would also reintroduce the
+   * self-referential key an earlier commit had to reason about; not needing
+   * it at all is better than proving it safe.
    */
+  --font-sans: var(--font-geist-sans);
 }
 
 /*
@@ -190,45 +200,41 @@
 @layer base {
   :root {
     /*
-     * dcyfr.tech keeps its serif headings and its Inter body through the
-     * de-brand.
+     * The bridge from next/font to the engine's three type hooks.
      *
-     * This is the second typographic identity in the wave, after dcyfr.codes,
-     * and it is the same call for the same reason. Every other site
-     * de-branded onto slate with no type consequence because their identity
-     * blocks were purely chromatic. This one's was not: it set --font-serif
-     * and then bound it to headings with a live CSS rule. dcyfr.tech is a
-     * publication — DCYFR Research, articles and whitepapers — so a serif
-     * heading face is content-appropriate rather than decorative, the same
-     * argument that kept mono at the code-snippet library. Colours and radius
-     * still pin to canonical slate, which is what Decision 1 is actually
-     * about.
+     * The engine binds body, headings and code to --font-body,
+     * --font-display and --font-mono, and the theme defines each as
+     * var(--font-<role>-loaded, <system stack>). Filling a hook here is the
+     * supported channel; declaring --font-body or --font-mono directly is
+     * what CONTRACT_VARS in the rei theme audit forbids.
      *
-     * --font-body-loaded reads --font-sans rather than naming Inter, because
-     * naming it would be wrong: next/font generates a hashed family
-     * (`__Inter_fd091ad6`), so a literal `'Inter'` would look for a system
-     * face and silently miss the one already in the bundle. Reading the
-     * variable next/font sets on <html> is the only correct spelling.
+     * dcyfr.tech keeps its serif headings, per adoption Decision 4 restated
+     * as chrome-v2 Decision 4. It is the only satellite with a stated
+     * publication identity (DCYFR Research, articles and whitepapers), so a
+     * serif display face is content-appropriate rather than decorative. Body
+     * and code are the halves that move to Geist. To take the full
+     * fleet-uniform sans instead, point --font-display-loaded at
+     * var(--font-geist-sans): nothing else in the site depends on the serif.
      *
-     * Measured before relying on it: --font-sans currently computes to
-     * `"Inter", "Inter Fallback"`, i.e. next/font's class beat the identity
-     * block's own literal `'Inter', ui-sans-serif, …` on the same element.
-     * So emptying that block changes nothing about body type — it only
-     * removes the losing half of a collision. (This is the dcyfr-codes PR #37
-     * lesson pointing the other way: there the identity block was what lost,
-     * and the site rendered sans for months.)
+     * The body hook names --font-geist-sans rather than --font-sans. Reading
+     * --font-sans was correct while the Inter loader bound that variable
+     * directly on <html>; after the swap it is a @theme inline mapping whose
+     * value is Geist's variable anyway, so naming the source is one hop
+     * shorter and does not depend on the mapping staying.
      *
-     * These are system stacks apart from Inter, per Decision 4. To take the
-     * full fleet-uniform sans instead, delete these two lines: nothing else
-     * in the site depends on them.
+     * --font-mono-loaded was unset before this commit and the two @apply
+     * font-mono uses in .prose-dcyfr fell through to the theme's system
+     * stack. They now get Geist Mono, which is the first real mono face this
+     * site has shipped.
      *
-     * --font-mono-loaded is left unset on purpose. The theme's own mono stack
-     * differs from the one the identity block spelled only in preferring
-     * "SF Mono" over SFMono-Regular, which resolve to the same face on macOS,
-     * so there is nothing to preserve.
+     * Nothing here is fetched at build time. geist wraps next/font/local over
+     * two woff2 files vendored in the package (Geist-Variable.woff2 and
+     * GeistMono-Variable.woff2, about 70 KB each), so the Google Fonts
+     * request the Inter loader made is gone rather than relocated.
      */
     --font-display-loaded: ui-serif, Georgia, 'Times New Roman', Times, serif;
-    --font-body-loaded: var(--font-sans);
+    --font-body-loaded: var(--font-geist-sans);
+    --font-mono-loaded: var(--font-geist-mono);
   }
 
   /*
@@ -237,8 +243,8 @@
    * It used to carry the editorial brand: a deep indigo --primary
    * (234 62% 26%) with an editorial gold --accent (38 92% 50%) the wordmark
    * and category badges were painted in, a 0.25rem --radius, and the serif /
-   * Inter / mono type trio now re-homed above. Emptying it is what de-brands
-   * the site onto canonical slate.
+   * Inter / mono type trio re-homed above, where the body and mono halves are
+   * now Geist. Emptying it is what de-brands the site onto canonical slate.
    *
    * Like dcyfr.bot, dcyfr.work and dcyfr.codes, this block was NOT a silent
    * clobber: it carried brand tokens only and never reached into a surface
