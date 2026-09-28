@@ -62,7 +62,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
             datePublished: article.publishedAt,
             publisher: { '@type': 'Organization', name: 'DCYFR', url: 'https://dcyfr.tech' },
             url: `https://dcyfr.tech/articles/${article.slug}`,
-          }).replace(/</g, '\\u003c'),
+          }).replaceAll('<', String.raw`\u003c`),
         }}
       />
 
