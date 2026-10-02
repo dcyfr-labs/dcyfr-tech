@@ -1,0 +1,54 @@
+name: Dependabot auto-merge sweep
+
+# Thin caller: real logic lives in dcyfr-labs/.github.
+#
+# WHY THIS EXISTS. PR mode (dependabot-auto-merge.yml) only fires on
+# `opened | synchronize | reopened`. It WITHHOLDS a bump by exiting SUCCESS with
+# just a `::notice::`, and nothing re-examines that PR afterwards. This sweep
+# re-runs the withheld runs so they merge once they become eligible.
+#
+# ⚠️ ON THIS REPO SWEEP MERGES ALMOST EVERY PATCH/MINOR BUMP.
+# The default branch has no required checks: this repo has no ruleset and no
+# classic branch protection (checked 2026-10-02).
+# With no required checks, native auto-merge would merge a PR at once, before
+# CI starts (dcyfr-labs/dcyfr-labs#957 to #965, 2026-10-02). So PR mode merges
+# only when every check has already finished green, and otherwise withholds
+# until CI is done. Delete this file and every such PR strands, green and
+# mergeable, with no failing check to notice.
+#
+# ⚠️ ALL THREE permissions below are required by the reusable workflow's caller
+# contract; `actions: write` is the one `gh run rerun` needs. A caller granting
+# less dies at `startup_failure`, which is SILENT: no check run, no annotation,
+# nothing red. That exact mistake stranded 73 PRs across 20 repos for 5 days
+# (2026-08-31 - 2026-09-05). If you change these, confirm a run actually
+# reached a step - never infer health from the absence of a failure.
+#
+# No `with:` block on purpose. The reusable input `sweep-max-prs` defaults to
+# 50, comfortably above the busiest repo's backlog, and a caller-side override
+# would have to be an expression over the trigger context - which cannot be
+# exercised until this file is already on the default branch.
+#
+# WEEKLY, at 07 UTC. The other 20 sweep callers fill every 3-minute slot of the
+# 06 UTC hour at no more than three per weekday; dcyfr-labs has no self-hosted
+# runners, and a merge fan-out on 2026-09-05 queued the whole org for ~20
+# minutes. The cooldown is 7 days, so weekly re-examines a withheld PR within a
+# few days of it becoming eligible.
+# Run it by hand any time with: gh workflow run "Dependabot auto-merge sweep"
+
+on:
+  schedule:
+    - cron: '8 7 * * 6'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  sweep:
+    uses: dcyfr-labs/.github/.github/workflows/dependabot-auto-merge-sweep.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
