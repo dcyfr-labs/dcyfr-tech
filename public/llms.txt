@@ -1,6 +1,6 @@
 # DCYFR Research
 
-> Deep dives into AI agent patterns, context engineering, delegation frameworks, and production-ready AI infrastructure from the DCYFR team.
+> Deep dives into AI agent patterns, context engineering, delegation frameworks, and production-ready AI infrastructure from DCYFR Labs.
 
 ## Pages
 - [Home](https://dcyfr.tech/): Latest research articles and featured deep dives.

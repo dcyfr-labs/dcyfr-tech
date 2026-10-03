@@ -4,7 +4,7 @@ import type { Whitepaper } from '@/lib/types';
 
 export const metadata: Metadata = {
   title: 'Whitepapers',
-  description: 'Technical specifications, design documents, and in-depth research from the DCYFR team.',
+  description: 'Technical specifications, design documents, and in-depth research from DCYFR Labs.',
 };
 
 function formatDate(iso: string): string {
@@ -23,7 +23,7 @@ export default function WhitepapersPage() {
       <div className="mx-auto max-w-5xl">
         <h1 className="text-3xl font-bold text-foreground mb-2">Whitepapers</h1>
         <p className="text-muted-foreground mb-10">
-          Technical specifications and in-depth research documents from the DCYFR team.
+          Technical specifications and in-depth research documents from DCYFR Labs.
         </p>
 
         {typed.length === 0 ? (

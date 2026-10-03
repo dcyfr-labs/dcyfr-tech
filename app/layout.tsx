@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: '%s | DCYFR Research',
   },
   description:
-    'Deep dives into AI agent patterns, context engineering, delegation frameworks, and production-ready AI infrastructure from the DCYFR team.',
+    'Deep dives into AI agent patterns, context engineering, delegation frameworks, and production-ready AI infrastructure from DCYFR Labs.',
   openGraph: {
     type: 'website',
     siteName: 'DCYFR Research',
@@ -139,7 +139,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <main id="main-content" className="flex-1 pt-18">
             {children}
           </main>
-          <SiteFooter brand="DCYFR" links={FOOTER} />
+          <SiteFooter brand="DCYFR Labs" links={FOOTER} />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

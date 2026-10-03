@@ -159,7 +159,7 @@ for (const exportDir of EXPORT_DIRS) {
       slug,
       title,
       description: meta.description ?? '',
-      author: meta.author ?? 'DCYFR Team',
+      author: meta.author ?? 'DCYFR Labs',
       publishedAt: meta.publishedAt
         ? new Date(meta.publishedAt).toISOString()
         : new Date().toISOString(),
