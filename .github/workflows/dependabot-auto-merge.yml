@@ -2,9 +2,11 @@ name: Dependabot auto-merge
 
 # actor: bot
 # Thin caller: real logic lives in the shared reusable workflow in dcyfr-labs/.github.
-# Patch/minor Dependabot bumps are approved and auto-merged once required status
-# checks pass (native auto-merge via the "main protection" ruleset); major bumps
-# stay open for manual review.
+# Patch/minor Dependabot bumps merge once every check has finished green; major
+# bumps stay open for manual review. This repo has NO ruleset and no branch
+# protection (checked 2026-10-02), so main requires no checks and the shared
+# workflow never arms native auto-merge (it would merge before CI). A run that
+# finds CI still going withholds; dependabot-auto-merge-sweep.yml re-runs it.
 
 on:
   pull_request:
