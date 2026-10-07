@@ -2,6 +2,7 @@
   "name": "dcyfr-tech-blog",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "dcyfr.tech — Research hub, whitepapers, and technical deep-dives for the DCYFR ecosystem",
   "scripts": {
     "dev": "next dev --port 3302",
