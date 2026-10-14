@@ -2,7 +2,7 @@
 
 ## Files
 
-- `snapshots.spec.ts` — visual regression baseline per [`openspec/changes/dcyfr-skeleton-sites-scaffolding/spec.md#51-screenshot-baseline`](../../../../openspec/changes/dcyfr-skeleton-sites-scaffolding/spec.md) and [`docs/dcyfr-workspace/polish-loop.md`](../../../../docs/dcyfr-workspace/polish-loop.md).
+- `snapshots.spec.ts` — visual regression baseline, one PNG per route and viewport.
 - `snapshots.spec.ts-snapshots/` — committed baseline PNGs (generated on first run).
 
 ## One-time setup
@@ -51,5 +51,4 @@ Fails if diff > 5% (`maxDiffPixelRatio: 0.05`).
 
 ## Related
 
-- [Polish loop architecture](../../../../docs/dcyfr-workspace/polish-loop.md)
-- [`nexus/scout-prompts/dcyfr-tech.md`](../../../../nexus/scout-prompts/dcyfr-tech.md) — scout context that reads these baselines
+These baselines also feed the maintainers' design polish loop (trend checks and design-token proposals), which runs from a private workspace and is not part of this repo.
