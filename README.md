@@ -21,14 +21,12 @@ Research hub, whitepapers, and technical deep-dives for the DCYFR ecosystem, liv
 
 ```sh
 npm install
-npm run dev        # http://localhost:3302
+npm run dev        # http://localhost:3307
 ```
-
-> **Port collision:** dev port **3302** is also claimed by [dcyfr-io](https://github.com/dcyfr-labs/dcyfr-io) — you cannot run both dev servers simultaneously without overriding one (`npm run dev -- --port <other>`).
 
 | Command | What it does |
 |---|---|
-| `npm run dev` / `npm run start` | Dev / production server on port **3302** |
+| `npm run dev` / `npm run start` | Dev / production server on port **3307** |
 | `npm run build` | Production build |
 | `npm run lint` / `npm run typecheck` | ESLint / `tsc --noEmit` |
 | `npm run export:content` | Re-run the Nexus content export locally |
@@ -57,7 +55,6 @@ None are required to run locally; every variable below is optional. The content-
 | `SENTRY_DSN` | Server and edge Sentry reporting; falls back to `NEXT_PUBLIC_SENTRY_DSN` |
 | `SENTRY_ORG` / `SENTRY_PROJECT` | Build-time source-map upload; default to `dcyfr-labs` / `dcyfr-tech` (`next.config.ts`) |
 | `INDEXNOW_KEY` | Served at `/indexnow.txt` for IndexNow; the route returns 404 when unset |
-
 
 ## Design-token & scaffold contract
 
