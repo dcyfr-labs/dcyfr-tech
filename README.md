@@ -42,10 +42,22 @@ npm run dev        # http://localhost:3302
 - `/whitepapers` — whitepaper library
 - `/search` — full-text search
 - `/rss.xml` — RSS feed
+- `/privacy` — privacy notice
+- `/robots.txt`, `/sitemap.xml` — generated from `app/robots.ts` and `app/sitemap.ts`
+- `/indexnow.txt` — IndexNow key file (see Environment variables)
+- `/.well-known/security.txt` — RFC 9116 security contact
 
 ## Environment variables
 
-No runtime secrets. `SENTRY_ORG` / `SENTRY_PROJECT` are used at build time for Sentry source-map upload. The content-export auth in CI is handled by GitHub App tokens configured in `export-nexus.yml`, not local env vars.
+None are required to run locally; every variable below is optional. The content-export auth in CI is handled by GitHub App tokens configured in `export-nexus.yml`, not local env vars.
+
+| Variable | Use |
+|---|---|
+| `NEXT_PUBLIC_SENTRY_DSN` | Client-side Sentry reporting (`instrumentation-client.ts`) |
+| `SENTRY_DSN` | Server and edge Sentry reporting; falls back to `NEXT_PUBLIC_SENTRY_DSN` |
+| `SENTRY_ORG` / `SENTRY_PROJECT` | Build-time source-map upload; default to `dcyfr-labs` / `dcyfr-tech` (`next.config.ts`) |
+| `INDEXNOW_KEY` | Served at `/indexnow.txt` for IndexNow; the route returns 404 when unset |
+
 
 ## Design-token & scaffold contract
 
