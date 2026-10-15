@@ -5,9 +5,9 @@
   "license": "MIT",
   "description": "dcyfr.tech — Research hub, whitepapers, and technical deep-dives for the DCYFR ecosystem",
   "scripts": {
-    "dev": "next dev --port 3302",
+    "dev": "next dev --port 3307",
     "build": "next build",
-    "start": "next start --port 3302",
+    "start": "next start --port 3307",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "export:content": "node scripts/export-nexus-content.mjs",
