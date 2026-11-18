@@ -31,13 +31,15 @@ npm run dev        # http://localhost:3307
 | `npm run lint` / `npm run typecheck` | ESLint / `tsc --noEmit` |
 | `npm run export:content` | Re-run the Nexus content export locally |
 | `npm run test:e2e` (`:ui`) | Playwright e2e suite |
-| `npm run test:snapshots` (`:update`) | Visual-regression snapshots (chromium) |
+| `npm run test:contrast` | Contrast spec (chromium) |
+| `npm run test:snapshots` (`:update`, `:rebaseline`) | Visual-regression snapshots (chromium) |
+| `npm run check:theme-wiring` | Verifies the theme files, the `globals.css` imports and the `data-identity` stamp |
 
 ## Routes
 
 - `/` — research hub landing page
 - `/articles`, `/articles/[slug]` — article index and detail pages
-- `/whitepapers` — whitepaper library
+- `/whitepapers`: whitepaper library, read from `data/whitepapers.json` (an empty array at the time of writing, and not written by the export script)
 - `/search` — full-text search
 - `/rss.xml` — RSS feed
 - `/privacy` — privacy notice
@@ -58,7 +60,7 @@ None are required to run locally; every variable below is optional. The content-
 
 ## Design-token & scaffold contract
 
-This site follows the `dcyfr-site-scaffold` contract: colors, spacing, radii, and typography resolve via CSS variables — no hardcoded design tokens. Local ESLint rules in `eslint-local-rules/` enforce this and the `design-tokens.yml` workflow gates every PR. From the workspace root, `npm run audit:sites` checks scaffold compliance across the site family.
+This site follows the `dcyfr-site-scaffold` contract: colors, spacing, radii, and typography resolve via CSS variables. Local ESLint rules in `eslint-local-rules/` enforce part of this: `no-hardcoded-colors`, `no-deprecated-design-tokens` and `no-legacy-dcyfr-palette` are errors, while `no-hardcoded-spacing` and `no-hardcoded-typography` are switched off in `eslint.config.mjs`. The `design-tokens.yml` workflow gates every PR. From the workspace root, `npm run audit:sites` checks scaffold compliance across the site family.
 
 ## CI
 
